@@ -12,3 +12,11 @@
 ```
 mvn clean compile
 ```
+
+После этого JAR-файл будет находиться в директории `target`, обычно с именем вида `spark-project-1.0-SNAPSHOT-jar-with-dependencies.jar`.
+
+Для запуска приложения используйте команду `spark-submit`:
+
+```
+spark-submit --class org.example.SessionMapReduceApp --master local[*] target/spark-project-1.0-SNAPSHOT-jar-with-dependencies.jar [input_path] [output_path]
+```
