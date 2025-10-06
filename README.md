@@ -22,20 +22,24 @@ mvn clean package
 ## Объяснение строки с `unknown` в выводе файла
 
 Строка с открытием документа DOC_OPEN имеет два формата:
-- DOC_OPEN <timestamp> <SEARCH_ID> <DOC_ID>
+- DOC_OPEN <timеstamp> <SEARCH_ID> <DOC_ID>
 - DOC_OPEN <SEARCH_ID> <DOC_ID>
 
 В выходных данных result/opens.txt для каждого открытия документа фиксируется дата в формате `dd.MM.yyyy`, извлекаемая из метки времени (timestamp). Поэтому в случаях, когда DOC_OPEN в строке не имеет <timestamp>, дата становится `"unknown"`.
 
 Если в конфигурации проекта установлено `dropUnknownDates = true`, то записи с `"unknown"` не сохраняются, если же опция выключена (по умолчанию), данные с `"unknown"` остаются, чтобы не терять событие вовсе.
 
+## Логирование
+
+
+
 ## Пример работы программы
 ```
-
-(Отладка) Всего быстрых поисков (QS): 17137
-(Отладка) Всего карточечных поисков (CARD_SEARCH): 4345
-Количество раз, когда в карточке производили поиск документа ACC_45616: 24
-Количество открытий каждого документа, найденного через быстрый поиск за каждый день -> result/opens.txt
+(debug) QS total: 17137
+(debug) CARD_SEARCH total: 4345
+ACC_45616 CARD_SEARCH count: 24
+Each document found through QS was opened each day -> result/opens.txt
+Error logs -> result/logs.txt
 
 Process finished with exit code 0
 ```
