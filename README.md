@@ -54,7 +54,7 @@ Process finished with exit code 0
 
 ## Тесты
 
-Для парсера из `infrastructure/Parser` написаны тесты, которые для файлов из `test/resources` построчно разбирает сессии и собирает объект domain, результаты записываются в `test/result`
+Для парсера из `infrastructure/Parser` написаны тесты, которые для файлов из `test/resources` построчно разбирают сессии и собирает объект domain, результаты записываются в `test/result`
 
 Например для файла `test/resources/7247`:
 ```
