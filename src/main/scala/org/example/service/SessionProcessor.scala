@@ -1,13 +1,20 @@
 package org.example.service
 
 import scala.collection.mutable
-import org.example.parser.LogParser
+import org.example.infrastructure.Parser
+import org.example.domain._
 
 class SessionProcessor {
   private[SessionProcessor] val unknowns = mutable.ListBuffer.empty[String]
+  private val unknownsSet = mutable.Set.empty[String]
 
-  private[SessionProcessor] def logUnknown(msg: String): Unit = synchronized {
-    unknowns += msg
+  // Логируем только один раз
+  private[SessionProcessor] def logUnknown(fileName: String, msg: String): Unit = synchronized {
+    val entry = s"$fileName | $msg"
+    if (!unknownsSet.contains(entry)) {
+      unknowns += entry
+      unknownsSet += entry
+    }
   }
 
   private[SessionProcessor] def getUnknowns: List[String] = unknowns.toList
@@ -19,71 +26,32 @@ object SessionProcessor {
   case class SessionStats(
                            qsCount: Int = 0,
                            cardCount: Int = 0,
-                           acc45616CardCount: Int = 0,
+                           TargetCardCount: Int = 0,
                            docOpens: Map[(String, String), Int] = Map.empty
                          )
 
-  private def isValidDocId(token: String): Boolean = {
-    token != null && token.matches("""[A-Z]{1,5}_\d{1,7}""")
-  }
+  def processSession(lines: Iterable[(String, String)], dropUnknownDates: Boolean = false): SessionStats = {
+    // Парсим сессию с нового Parser
+    val session: Session = Parser.parseSession(lines, comp.logUnknown)
 
-  def processSession(
-                      lines: Iterable[(String, String)],
-                      dropUnknownDates: Boolean = false
-                    ): SessionStats = {
-    val qsDocs = mutable.Set.empty[String]
-    var localQSCount, localCardCount, acc45616CardSearchCount = 0
-    var inCard = false
-    val cardBuf = mutable.ListBuffer.empty[String]
-    val docOpens = mutable.ListBuffer.empty[(String, String)] // (docId, ts)
+    val docCounts = mutable.Map.empty[(String, String), Int]
+    session.docOpens.foreach { doc =>
+      val date = doc.timestamp
+      val docId = doc.docId
 
-    for ((fileName, raw) <- lines) {
-      val line = Option(raw).getOrElse("").trim
-      if (line.startsWith("QS")) {
-        localQSCount += 1
-        val tokens = line.split("\\s+").drop(1)
-        var skipBlock = false
-        for (t <- tokens) {
-          if (t.startsWith("{")) skipBlock = true
-          if (!skipBlock && isValidDocId(t)) qsDocs += t
-          else if (!skipBlock && t.nonEmpty) comp.logUnknown(s"$fileName | Unknown QS docId: $t")
-          if (t.endsWith("}")) skipBlock = false
-        }
-      } else if (line.startsWith("CARD_SEARCH_START")) {
-        inCard = true
-        localCardCount += 1
-        cardBuf.clear()
-      } else if (line.startsWith("CARD_SEARCH_END") && inCard) {
-        inCard = false
-        cardBuf.foreach { d =>
-          if (isValidDocId(d)) qsDocs += d
-          else comp.logUnknown(s"$fileName | Unknown CARD docId: $d")
-        }
-        cardBuf.clear()
-      } else if (inCard) {
-        if (line.startsWith("$0") && line.contains("ACC_45616")) acc45616CardSearchCount += 1
-        line.split("\\s+").foreach(t => cardBuf += t)
-      } else if (line.startsWith("DOC_OPEN")) {
-        val toks = line.split("\\s+")
-        if (toks.length >= 3) {
-          val tsCandidate = toks(1)
-          val docCandidate = toks.last
-          if (isValidDocId(docCandidate)) {
-            docOpens += ((docCandidate, tsCandidate))
-          } else comp.logUnknown(s"$fileName | Bad DOC_OPEN docId: $line")
-        } else comp.logUnknown(s"$fileName | Bad DOC_OPEN too few tokens: $line")
+      if (!dropUnknownDates || date != "invalid" || docId != "unknown") {
+        docCounts((date, docId)) = docCounts.getOrElse((date, docId), 0) + 1
       }
     }
 
-    val docCounts = mutable.Map.empty[(String, String), Int]
-    docOpens.foreach { case (docId, ts) =>
-      val date = LogParser.extractDateFromTimestamp(ts)
-      if (!dropUnknownDates || date != "unknown")
-        docCounts((date, docId)) = docCounts.getOrElse((date, docId), 0) + 1
-      if (date == "unknown") comp.logUnknown(s"Unknown date for doc: $docId ts: $ts")
-    }
-
-    SessionStats(localQSCount, localCardCount, acc45616CardSearchCount, docCounts.toMap)
+    SessionStats(
+      qsCount = session.qsQueries.length,
+      cardCount = session.cardSearches.length,
+      TargetCardCount = session.cardSearches
+        .flatMap(_.params)
+        .count { case (num, text) => num == 0 && text.contains("ACC_45616") },
+      docOpens = docCounts.toMap
+    )
   }
 
   def getUnknowns: List[String] = comp.getUnknowns

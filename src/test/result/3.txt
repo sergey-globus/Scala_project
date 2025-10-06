@@ -1,0 +1,57 @@
+Session ID: 3
+
+No Card Searches found.
+==================================================
+Query Searches:
+QSId: 24743895
+timestamp: 30.06.2020_23:00:05
+query: 708-р от 21.03.2020
+foundDocs: EXPZ_745996, EXPZ_746205, ACC_45614, EXPZ_741518
+---
+QSId: 545153481
+timestamp: 30.06.2020_23:01:21
+query: товарно-транспортная накладная
+foundDocs: PPN_9, PSP_7, DOF_33506, PBI_242729, QUEST_177049, PBI_255248, QUEST_170591, DOF_90790, DOF_71907, DOF_90791, PBI_258012, LAW_32449, QUEST_177780, PBI_261568, PBI_251508, PBI_261779, DOF_87636, QUEST_189630, QUEST_198034, QUEST_186215, QUEST_178353, DOF_87042, DOF_33413, QUEST_190247, PBI_241143, QUEST_184995, PBI_242728, QUEST_196405, PBI_255019, PBI_242727, QUEST_196325, PSP_9, LAW_209425, LAW_23913, PBI_235366, PBI_259296, PBI_239662, QUEST_186064, PBI_238314, PBI_258010, PPN_4, DOF_95106
+---
+==================================================
+Doc Opens:
+timestamp: 30.06.2020
+cardOrQSId: 24743895
+docId: EXPZ_741518
+---
+timestamp: 30.06.2020
+cardOrQSId: 24743895
+docId: ACC_45614
+---
+timestamp: 30.06.2020
+cardOrQSId: 24743895
+docId: EXPZ_741518
+---
+timestamp: 30.06.2020
+cardOrQSId: 24743895
+docId: ACC_45614
+---
+timestamp: 30.06.2020
+cardOrQSId: 545153481
+docId: DOF_71907
+---
+timestamp: 30.06.2020
+cardOrQSId: 545153481
+docId: QUEST_178353
+---
+timestamp: 30.06.2020
+cardOrQSId: 545153481
+docId: DOF_33413
+---
+timestamp: 30.06.2020
+cardOrQSId: 545153481
+docId: DOF_71907
+---
+timestamp: 30.06.2020
+cardOrQSId: 545153481
+docId: DOF_71907
+---
+timestamp: 30.06.2020
+cardOrQSId: 545153481
+docId: PBI_251508
+---

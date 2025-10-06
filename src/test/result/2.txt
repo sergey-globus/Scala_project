@@ -1,0 +1,61 @@
+Session ID: 2
+
+No Card Searches found.
+==================================================
+Query Searches:
+QSId: 1482083015
+timestamp: 19.02.2020_04:28:36
+query: вызов на собеседование иностранного гражданина
+foundDocs: CMB_18739, CJI_103337, CJI_119770, CJI_109032, CJI_129430, CJI_121149, CMB_18736, CJI_96053, CJI_99747, PBI_257979, CJI_109597, CJI_131330, CMB_18426, CJI_120332, CJI_88718, CJI_104376, PBI_218541, CMB_18363, ACC_45616, PBI_193270, CJI_105729, CJI_94607, CJI_81622, PBI_227324, CJI_111518, CJI_68848, CJI_110888, CJI_120428, CJI_96764, CJI_101483, CJI_101163, CJI_129452, CMB_18810, CJI_97965, CJI_99962, CJI_97490, CMB_18822, CJI_117558, CMB_18781, CJI_108783, CMB_18916, CMB_18910, CMB_18721, CJI_126681, CJI_68951, CMB_18680, CJI_128496, CJI_97360
+---
+QSId: 106640453
+timestamp: 19.02.2020_04:38:06
+query: 13.07.2020 № 774 приказ министерства культуры Российской Федерации
+foundDocs: PNPA_59388, LAW_367842, PNPA_49762
+---
+==================================================
+Doc Opens:
+timestamp: 19.02.2020
+cardOrQSId: 1482083015
+docId: CJI_97490
+---
+timestamp: 19.02.2020
+cardOrQSId: 1482083015
+docId: CJI_99747
+---
+timestamp: 19.02.2020
+cardOrQSId: 1482083015
+docId: CJI_97360
+---
+timestamp: 19.02.2020
+cardOrQSId: 1482083015
+docId: CJI_105729
+---
+timestamp: 19.02.2020
+cardOrQSId: 1482083015
+docId: CJI_128496
+---
+timestamp: 19.02.2020
+cardOrQSId: 1482083015
+docId: PBI_227324
+---
+timestamp: 19.02.2020
+cardOrQSId: 106640453
+docId: PNPA_49762
+---
+timestamp: 19.02.2020
+cardOrQSId: 106640453
+docId: PNPA_59388
+---
+timestamp: 19.02.2020
+cardOrQSId: 106640453
+docId: LAW_367842
+---
+timestamp: 19.02.2020
+cardOrQSId: 106640453
+docId: PNPA_49762
+---
+timestamp: 19.02.2020
+cardOrQSId: 1482083015
+docId: CMB_18426
+---

@@ -1,0 +1,65 @@
+Session ID: 6
+
+Card Searches:
+cardId: 26175282
+timestamp: 13.06.2020_00:51:44
+params: (134, 'региональный материнский (семейный) капитал')
+foundDocs: CJI_93861, CJI_113465, CMB_18930, CJI_123613, CJI_105023, PKBO_21787, CJI_123053, PAP_44546, PAP_70372, PKBO_21788, CMB_18364, PKBO_46091, CJI_121056, PKBO_31170, CMB_18688, LAW_357169, CJI_114435, PKBO_33576, CJI_117667, CMB_18424, CJI_98380, PAP_5219
+---
+==================================================
+Query Searches:
+QSId: 25808312
+timestamp: 13.06.2020_00:59:25
+query: удельные показатели кадастровой стоимости земли промышленности, энергетики, транспорта, связи, радиовещания, телевидения, информатики, земли для обеспечения космической деятельности, земли обороны, безопасности и земли иного специального назначения
+foundDocs: MOB_164787, CJI_82151, LAW_164777, ARB_116933, ARB_373983, MOB_192438, MOB_185936, ARB_270237, LAW_55256, ARB_437077, PSP_14, PSR_26512, PRJB_129197, ARB_158489
+---
+==================================================
+Doc Opens:
+timestamp: 13.06.2020
+cardOrQSId: 26175282
+docId: PKBO_21787
+---
+timestamp: 13.06.2020
+cardOrQSId: 26175282
+docId: PAP_70372
+---
+timestamp: 13.06.2020
+cardOrQSId: 26175282
+docId: PKBO_31170
+---
+timestamp: 13.06.2020
+cardOrQSId: 26175282
+docId: PKBO_21787
+---
+timestamp: 13.06.2020
+cardOrQSId: 26175282
+docId: PKBO_21787
+---
+timestamp: 13.06.2020
+cardOrQSId: 26175282
+docId: CJI_113465
+---
+timestamp: 13.06.2020
+cardOrQSId: 25808312
+docId: MOB_192438
+---
+timestamp: 13.06.2020
+cardOrQSId: 25808312
+docId: PSP_14
+---
+timestamp: 13.06.2020
+cardOrQSId: 25808312
+docId: MOB_185936
+---
+timestamp: 13.06.2020
+cardOrQSId: 25808312
+docId: PSR_26512
+---
+timestamp: 13.06.2020
+cardOrQSId: 25808312
+docId: CJI_82151
+---
+timestamp: 13.06.2020
+cardOrQSId: 25808312
+docId: ARB_437077
+---
