@@ -3,31 +3,31 @@ Session ID: 4
 No Card Searches found.
 ==================================================
 Query Searches:
-QSId: 24455574
-timestamp: 21.03.2020_08:20:08
+id: 24455574
+datetime: 21.03.2020_08:20:08
 query: разумный срок ответа на претензию
 foundDocs: PAS_585689, OTN_9149, PAS_553807, PAS_553896, ACC_45616, PAS_596656, PAS_107776, STR_1958, PAS_430849
 ---
-QSId: 203770859
-timestamp: 21.03.2020_08:20:58
+id: 203770859
+datetime: 21.03.2020_08:20:58
 query: ПИСЬМО от 17 ноября 2020 г. N 18-2/И/2-17599
 foundDocs: LAW_368672
 ---
 ==================================================
 Doc Opens:
-timestamp: 21.03.2020
-cardOrQSId: 24455574
+datetime: 21.03.2020
+searchId: 24455574
 docId: STR_1958
 ---
-timestamp: 21.03.2020
-cardOrQSId: 24455574
+datetime: 21.03.2020
+searchId: 24455574
 docId: PAS_596656
 ---
-timestamp: 21.03.2020
-cardOrQSId: 203770859
+datetime: 21.03.2020
+searchId: 203770859
 docId: LAW_368672
 ---
-timestamp: 21.03.2020
-cardOrQSId: 24455574
+datetime: 21.03.2020
+searchId: 24455574
 docId: STR_1958
 ---

@@ -3,63 +3,63 @@ Session ID: 7
 No Card Searches found.
 ==================================================
 Query Searches:
-QSId: 27620928
-timestamp: 03.05.2020_20:37:36
+id: 27620928
+datetime: 03.05.2020_20:37:36
 query: КоАП РФ утверждения ехал по полосе опровергаются
 foundDocs: CJI_55769, CMB_18811, PKBO_9403, CMB_16818, CJI_125891, CJI_1990, ACC_45616, CMB_16119, CJI_122325, CJI_62783, CMB_18705, CMB_10064, CJI_127962, CMB_17807, CMB_18086, CMB_15759, CMB_17467, CMB_16074, CMB_16633, CMB_18188, CMB_17706, CMB_18786, CMB_16702, CMB_15587, CMB_17418, CJI_73135, CMB_15568, CJI_80515, CMB_17298, CJI_128028, CJI_31853, CMB_18241, CMB_18846, CJI_60254, CMB_18822, CMB_17668, CMB_17512, CMB_18892, CMB_17587, CJI_34922, CMB_13781, CJI_64594, PKBO_4295, CJI_7334, CJI_115739, CMB_18521, CMB_16250, CMB_16509, CMB_18070, CJI_42460
 ---
-QSId: 1214120390
-timestamp: 03.05.2020_20:42:26
+id: 1214120390
+datetime: 03.05.2020_20:42:26
 query: если больничный 15 дней нужна ли подпись председателя вк
 foundDocs: PBI_236035, CJI_131562, PKV_1417, PKBO_44783
 ---
 ==================================================
 Doc Opens:
-timestamp: 03.05.2020
-cardOrQSId: 27620928
+datetime: 03.05.2020
+searchId: 27620928
 docId: CMB_16119
 ---
-timestamp: 03.05.2020
-cardOrQSId: 27620928
+datetime: 03.05.2020
+searchId: 27620928
 docId: CJI_115739
 ---
-timestamp: 03.05.2020
-cardOrQSId: 27620928
+datetime: 03.05.2020
+searchId: 27620928
 docId: CMB_18521
 ---
-timestamp: 03.05.2020
-cardOrQSId: 27620928
+datetime: 03.05.2020
+searchId: 27620928
 docId: CJI_42460
 ---
-timestamp: 03.05.2020
-cardOrQSId: 27620928
+datetime: 03.05.2020
+searchId: 27620928
 docId: CMB_17512
 ---
-timestamp: 03.05.2020
-cardOrQSId: 27620928
+datetime: 03.05.2020
+searchId: 27620928
 docId: CMB_16702
 ---
-timestamp: 03.05.2020
-cardOrQSId: 1214120390
+datetime: 03.05.2020
+searchId: 1214120390
 docId: PKBO_44783
 ---
-timestamp: 03.05.2020
-cardOrQSId: 1214120390
+datetime: 03.05.2020
+searchId: 1214120390
 docId: PKV_1417
 ---
-timestamp: 03.05.2020
-cardOrQSId: 1214120390
+datetime: 03.05.2020
+searchId: 1214120390
 docId: CJI_131562
 ---
-timestamp: 03.05.2020
-cardOrQSId: 1214120390
+datetime: 03.05.2020
+searchId: 1214120390
 docId: PBI_236035
 ---
-timestamp: 03.05.2020
-cardOrQSId: 1214120390
+datetime: 03.05.2020
+searchId: 1214120390
 docId: PBI_236035
 ---
-timestamp: 03.05.2020
-cardOrQSId: 27620928
+datetime: 03.05.2020
+searchId: 27620928
 docId: CMB_10064
 ---

@@ -3,23 +3,23 @@ Session ID: 0
 No Card Searches found.
 ==================================================
 Query Searches:
-QSId: 155175031
-timestamp: 01.07.2020
+id: 155175031
+datetime: 01.07.2020
 query: пот в строительстве
 foundDocs: None
 ---
-QSId: 12246827
-timestamp: 01.07.2020_13:48:07
+id: 12246827
+datetime: 01.07.2020_13:48:07
 query: 135 крайний север
 foundDocs: CMB_18273, CMB_18765, LAW_297899, ACC_45616, PSR_61438, LAW_343721, PKBO_40564, CJI_127841, LAW_358470, PKBO_42989, PBI_261699, CJI_97161, LAW_284617, PKV_673, LAW_286829, LAW_363027, LAW_96561, PKBO_31100, LAW_360292, PBI_239409, PAP_61473, PSR_53564, LAW_103255, LAW_308166, LAW_216198, PAP_54521, CJI_121009, LAW_338052, CMB_18916, CMB_18951, LAW_334539, CJI_124679, PBI_235342, LAW_52597, PKBO_35066, LAW_219690, CMB_18698
 ---
 ==================================================
 Doc Opens:
-timestamp: 01.07.2020
-cardOrQSId: 12246827
+datetime: 01.07.2020
+searchId: 12246827
 docId: PBI_261699
 ---
-timestamp: 01.07.2020
-cardOrQSId: 155175031
+datetime: 01.07.2020
+searchId: 155175031
 docId: CJI_126024
 ---

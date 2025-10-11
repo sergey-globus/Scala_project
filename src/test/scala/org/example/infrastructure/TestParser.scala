@@ -10,7 +10,7 @@ class TestParser extends AnyFunSuite {
 
   private def debugSessionToString(session: org.example.domain.Session): String = {
     val sb = new StringBuilder
-    sb.append(s"Session ID: ${session.sessionId}\n\n")
+    sb.append(s"Session ID: ${session.id}\n\n")
 
     // Card Searches
     if (session.cardSearches.nonEmpty) {
@@ -20,8 +20,8 @@ class TestParser extends AnyFunSuite {
           cs.params.map { case (num, text) => s"($num, '$text')" }.mkString(", ")
         else "None"
         val foundDocsStr = if (cs.foundDocs.nonEmpty) cs.foundDocs.mkString(", ") else "None"
-        sb.append(s"cardId: ${cs.cardId}\n")
-        sb.append(s"timestamp: ${cs.timestamp}\n")
+        sb.append(s"id: ${cs.id}\n")
+        sb.append(s"datetime: ${cs.datetime}\n")
         sb.append(s"params: $paramsStr\n")
         sb.append(s"foundDocs: $foundDocsStr\n---\n")
       }
@@ -30,12 +30,12 @@ class TestParser extends AnyFunSuite {
     sb.append("=" * 50 + "\n")
 
     // Query Searches
-    if (session.qsQueries.nonEmpty) {
+    if (session.quickSearches.nonEmpty) {
       sb.append("Query Searches:\n")
-      session.qsQueries.foreach { qs =>
+      session.quickSearches.foreach { qs =>
         val foundDocsStr = if (qs.foundDocs.nonEmpty) qs.foundDocs.mkString(", ") else "None"
-        sb.append(s"QSId: ${qs.QSId}\n")
-        sb.append(s"timestamp: ${qs.timestamp}\n")
+        sb.append(s"id: ${qs.id}\n")
+        sb.append(s"datetime: ${qs.datetime}\n")
         sb.append(s"query: ${qs.query}\n")
         sb.append(s"foundDocs: $foundDocsStr\n---\n")
       }
@@ -47,8 +47,8 @@ class TestParser extends AnyFunSuite {
     if (session.docOpens.nonEmpty) {
       sb.append("Doc Opens:\n")
       session.docOpens.foreach { doc =>
-        sb.append(s"timestamp: ${doc.timestamp}\n")
-        sb.append(s"cardOrQSId: ${doc.cardOrQSId}\n")
+        sb.append(s"datetime: ${doc.datetime}\n")
+        sb.append(s"searchId: ${doc.searchId}\n")
         sb.append(s"docId: ${doc.docId}\n---\n")
       }
     } else sb.append("No Doc Opens found.\n")
@@ -67,14 +67,12 @@ class TestParser extends AnyFunSuite {
     // Проходим по всем файлам в папке ресурсов
     Files.list(resourcesRoot).iterator().asScala.foreach { filePath =>
       if (Files.isRegularFile(filePath)) {
-        val lines = Files.readAllLines(filePath).asScala.toSeq
+        val lines = Files.readAllLines(filePath).asScala.iterator
         assert(lines.nonEmpty, s"Файл ${filePath.getFileName} пустой")
 
-        val linesSeq: Seq[(String, String)] = lines.map(l => (filePath.getFileName.toString, l))
-        val session = Parser.parseSession(linesSeq, (_file: String, _msg: String) => ())
-
+        val session = Parser.parseSession(filePath.getFileName.toString, lines)
         // Проверяем, что QS и DocOpen правильно распарсились
-        assert(session.qsQueries.nonEmpty || session.cardSearches.nonEmpty, s"Файл ${filePath.getFileName}: нет поисковых действий")
+        assert(session.quickSearches.nonEmpty || session.cardSearches.nonEmpty, s"Файл ${filePath.getFileName}: нет поисковых действий")
         assert(session.docOpens.nonEmpty, s"Файл ${filePath.getFileName}: нет открытых документов")
 
         // Создаём debug-файл в src/test/result

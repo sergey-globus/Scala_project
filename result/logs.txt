@@ -1,1 +1,14 @@
-123 | Unknown date: 01.06.202x_18:59:29
+Invalid date: 1
+[WARINING] Not founds docs inside CARD_SEARCH: 31
+----------
+5547 | [WARINING] Not founds docs inside CARD_SEARCH: 382205392
+5632 | [WARINING] Not founds docs inside CARD_SEARCH: -1613973812
+123 | Invalid date: 01.06.202x_18:59:29
+1486 | [WARINING] Not founds docs inside CARD_SEARCH: 882460750
+6209 | [WARINING] Not founds docs inside CARD_SEARCH: 23414234
+6211 | [WARINING] Not founds docs inside CARD_SEARCH: 1843207469
+184 | [WARINING] Not founds docs inside CARD_SEARCH: 18093775
+2015 | [WARINING] Not founds docs inside CARD_SEARCH: 298608125
+6710 | [WARINING] Not founds docs inside CARD_SEARCH: 184228265
+6880 | [WARINING] Not founds docs inside CARD_SEARCH: 20199305
+2537 | [WARINING] Not founds docs inside CARD_SEARCH: 42795921

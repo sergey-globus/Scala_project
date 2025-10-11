@@ -3,63 +3,63 @@ Session ID: 1
 No Card Searches found.
 ==================================================
 Query Searches:
-QSId: 1399238629
-timestamp: 13.04.2020_22:18:09
+id: 1399238629
+datetime: 13.04.2020_22:18:09
 query: приведение устава в соответствие с 99-фз
 foundDocs: CMB_18716, CMB_18165, CMB_18941, CMB_18933, CMB_18544, CMB_18282, CJI_111581, CMB_18773, CJI_111476, PBI_262682, PKS_7, PBI_257459, QUEST_139672, CMB_18399, CJI_104028, CMB_18351, CMB_18307, PKS_20, CJI_111474, CMB_18172, LAW_200570, CJI_97960
 ---
-QSId: -760458026
-timestamp: 13.04.2020_22:25:44
+id: -760458026
+datetime: 13.04.2020_22:25:44
 query: возможна ли пролонгаци€ договора по 44-фз
 foundDocs: CJI_124814, PSG_42, CJI_130045, PBI_263260, CJI_101419, CJI_110103, QUEST_166943, LAW_218867, CJI_100976, CJI_109405, CJI_96980, CJI_118922, QUEST_194867, CJI_124947, CJI_107702, CMB_18497, CJI_120812, CJI_109059, CJI_117833
 ---
 ==================================================
 Doc Opens:
-timestamp: 13.04.2020
-cardOrQSId: 1399238629
+datetime: 13.04.2020
+searchId: 1399238629
 docId: PBI_257459
 ---
-timestamp: 13.04.2020
-cardOrQSId: 1399238629
+datetime: 13.04.2020
+searchId: 1399238629
 docId: CMB_18716
 ---
-timestamp: 13.04.2020
-cardOrQSId: 1399238629
+datetime: 13.04.2020
+searchId: 1399238629
 docId: CMB_18544
 ---
-timestamp: 13.04.2020
-cardOrQSId: 1399238629
+datetime: 13.04.2020
+searchId: 1399238629
 docId: CMB_18941
 ---
-timestamp: 13.04.2020
-cardOrQSId: 1399238629
+datetime: 13.04.2020
+searchId: 1399238629
 docId: PBI_257459
 ---
-timestamp: 13.04.2020
-cardOrQSId: 1399238629
+datetime: 13.04.2020
+searchId: 1399238629
 docId: CJI_111476
 ---
-timestamp: 13.04.2020
-cardOrQSId: -760458026
+datetime: 13.04.2020
+searchId: -760458026
 docId: PSG_42
 ---
-timestamp: 13.04.2020
-cardOrQSId: -760458026
+datetime: 13.04.2020
+searchId: -760458026
 docId: CJI_110103
 ---
-timestamp: 13.04.2020
-cardOrQSId: -760458026
+datetime: 13.04.2020
+searchId: -760458026
 docId: CJI_120812
 ---
-timestamp: 13.04.2020
-cardOrQSId: -760458026
+datetime: 13.04.2020
+searchId: -760458026
 docId: QUEST_166943
 ---
-timestamp: 13.04.2020
-cardOrQSId: -760458026
+datetime: 13.04.2020
+searchId: -760458026
 docId: PSG_42
 ---
-timestamp: 13.04.2020
-cardOrQSId: -760458026
+datetime: 13.04.2020
+searchId: -760458026
 docId: CJI_101419
 ---
