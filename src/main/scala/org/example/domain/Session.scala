@@ -16,6 +16,8 @@ object Session {
   private val prefix: String = "SESSION_START"
   private val postfix: String = "SESSION_END"
 
+  private class InvalidSession(msg: String) extends Exception(msg)
+
   private val allEvent: Seq[EventObject[_ <: Event]] =
     Seq(CardSearch, QuickSearch, DocOpen)
 
@@ -29,34 +31,41 @@ object Session {
              logUnknown: (String, String) => Unit
            ): Session = {
 
+    // --- Проверка первой строки: SESSION_START ---
+    if (!lines.hasNext) throw new InvalidSession("Empty file, no SESSION_START found")
+    val firstLine = lines.next().trim
+    if (!firstLine.startsWith(prefix))
+      throw new InvalidSession(s"First line must be started SESSION_START, found line: $firstLine")
+
     val session = new Session(fileName)
 
-    while (lines.hasNext) {
+    // SESSION_START Datetime
+    val startToks = firstLine.split("\\s+")
+    session.startDatetime = startToks.lift(1).getOrElse("unknown")
+    if (startToks.length > 2)
+      logUnknown(fileName, s"Bad SESSION_START line format: $firstLine")
+    if (session.startDatetime == "invalid")
+      logUnknown(fileName, s"Invalid date: ${session.startDatetime}")
+
+    // --- Обрабатываем события до SESSION_END ---
+    var endFound = false
+    while (lines.hasNext && !endFound) {
       val line = lines.next().trim
 
-      // SESSION_START Datetime
-      if (line.startsWith(prefix)) {
-        val toks = line.split("\\s+")
-        val dt = toks.lift(1).getOrElse("unknown")
-        session.startDatetime = dt
-        if (dt == "invalid") logUnknown(fileName, s"Invalid date: $dt")
-        if (toks.length > 2) logUnknown(fileName, s"Bad SESSION_START line format: $line")
-      }
-
       // SESSION_END Datetime
-      else if (line.startsWith(postfix)) {
-        val toks = line.split("\\s+")
-        val dt = toks.lift(1).getOrElse("unknown")
-        session.endDatetime = dt
-        if (dt == "invalid") logUnknown(fileName, s"Invalid date: $dt")
-        if (toks.length > 2) logUnknown(fileName, s"Bad SESSION_END line format: $line")
+      if (line.startsWith(postfix)) {
+        val endToks = line.split("\\s+")
+        session.endDatetime = endToks.lift(1).getOrElse("unknown")
+        if (endToks.length > 2) logUnknown(fileName, s"Bad SESSION_END line format: $line")
+        if (session.endDatetime == "invalid") logUnknown(fileName, s"Invalid date: ${session.endDatetime}")
+        endFound = true
       }
 
-      // начало события
+      // --- Начало события ---
       else if (line.nonEmpty) {
         val maybeEvent = allEvent.collectFirst {
           case event if event.matches(line) =>
-            // парсер возвращает объект Event
+            // Парсер возвращает объект Event
             event.parse(fileName, line, lines, isValidDocId, extractDateFromDatetime, logUnknown)
         }
 
@@ -65,8 +74,11 @@ object Session {
           case None     => logUnknown(fileName, s"Unknown event: $line")
         }
       }
-
     }
+
+    // --- Проверка: SESSION_END должна быть ---
+    if (!endFound)
+      throw new InvalidSession("SESSION_END not found at the end of file")
 
     session
   }

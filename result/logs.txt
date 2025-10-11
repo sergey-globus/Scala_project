@@ -1,9 +1,16 @@
-Invalid date: 1
+InvalidSession: 1
 [WARINING] Not founds docs inside CARD_SEARCH: 31
 ----------
 5547 | [WARINING] Not founds docs inside CARD_SEARCH: 382205392
 5632 | [WARINING] Not founds docs inside CARD_SEARCH: -1613973812
-123 | Invalid date: 01.06.202x_18:59:29
+123 | Exception (parseSession failed):
+  Type: InvalidSession
+  Message: First line must be started SESSION_START, found line: START 01.06.2020_18:57:37
+  Stack trace:
+      at org.example.domain.Session$.parse(Session.scala:38)
+    at org.example.infrastructure.Parser$.parseSession(Parser.scala:34)
+    at org.example.app.MainApp$.$anonfun$main$2(MainApp.scala:34)
+
 1486 | [WARINING] Not founds docs inside CARD_SEARCH: 882460750
 6209 | [WARINING] Not founds docs inside CARD_SEARCH: 23414234
 6211 | [WARINING] Not founds docs inside CARD_SEARCH: 1843207469

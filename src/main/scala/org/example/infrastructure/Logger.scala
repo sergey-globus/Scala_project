@@ -33,19 +33,21 @@ object Logger {
 
   // Логируем исключение с stack trace
   def logException(fileName: String, ex: Throwable, context: String = ""): Unit = synchronized {
-    val stack = ex.getStackTrace.take(10).map(_.toString).mkString("\n    at ")
+    val stack = ex.getStackTrace.take(3).map(_.toString).mkString("\n    at ")
     val msg =
       s"""$fileName | Exception${if (context.nonEmpty) s" ($context)" else ""}:
-                    |Type: ${ex.getClass.getSimpleName}
-                    |Message: ${ex.getMessage}
-                    |Stack trace:
-                    |    at $stack
-                    |""".stripMargin
+                   |  Type: ${ex.getClass.getSimpleName}
+                   |  Message: ${ex.getMessage}
+                   |  Stack trace:
+                   |      at $stack
+                   |""".stripMargin
 
-    unknowns += msg
-
-    val et = ex.getClass.getSimpleName
-    counts(et) = counts.getOrElse(et, 0) + 1
+    if (!unknownsSet.contains(msg)) {
+      unknowns += msg
+      unknownsSet += msg
+      val et = ex.getClass.getSimpleName
+      counts(et) = counts.getOrElse(et, 0) + 1
+    }
   }
 
   def getStats: String = synchronized {
