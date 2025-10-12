@@ -31,14 +31,37 @@ mvn clean package
 
 ## Логирование
 
-Информация об ошибках и необработанных форматах собирается в `result/logs.txt`, туда же записываются данные при аварийной обработке сессии, когда получаем исключение - программа продолжает работу, не учитывая сессию, `result/logs.txt` попадают данные со stack trace
+Информация об ошибках и необработанных форматах собирается в `result/logs.txt`, туда же записываются данные при аварийной обработке сессии, когда получаем исключение - программа продолжает работу, не учитывая сессию, в логи попадают данные со stack trace
+
+В логах предусмотрен аккумулятор ошибок и для каждого типа в файл выводится не больше заданного числа (10) записей
 
 Добавим ошибку в один из файлов:
 <img src="images/screenshot-123.png" alt="Скриншот" width="500"/>
 
 После запуска в `result/logs.txt` появилась строка с именем файла и ошибкой:
 ```
-123 | Unknown date: 01.06.202x_18:59:29
+InvalidSession: 1
+[WARINING] Not founds docs inside CARD_SEARCH: 31
+----------
+5547 | [WARINING] Not founds docs inside CARD_SEARCH: 382205392
+5632 | [WARINING] Not founds docs inside CARD_SEARCH: -1613973812
+123 | Exception (parseSession failed):
+  Type: InvalidSession
+  Message: First line must be started SESSION_START, found line: START 01.06.2020_18:57:37
+  Stack trace:
+      at org.example.domain.Session$.parse(Session.scala:38)
+    at org.example.infrastructure.Parser$.parseSession(Parser.scala:34)
+    at org.example.app.MainApp$.$anonfun$main$2(MainApp.scala:34)
+
+1486 | [WARINING] Not founds docs inside CARD_SEARCH: 882460750
+6209 | [WARINING] Not founds docs inside CARD_SEARCH: 23414234
+6211 | [WARINING] Not founds docs inside CARD_SEARCH: 1843207469
+184 | [WARINING] Not founds docs inside CARD_SEARCH: 18093775
+2015 | [WARINING] Not founds docs inside CARD_SEARCH: 298608125
+6710 | [WARINING] Not founds docs inside CARD_SEARCH: 184228265
+6880 | [WARINING] Not founds docs inside CARD_SEARCH: 20199305
+2537 | [WARINING] Not founds docs inside CARD_SEARCH: 42795921
+
 ```
 
 ## Пример работы программы
