@@ -20,10 +20,13 @@ class TestParser extends AnyFunSuite {
           cs.params.map { case (num, text) => s"($num, '$text')" }.mkString(", ")
         else "None"
         val foundDocsStr = if (cs.foundDocs.nonEmpty) cs.foundDocs.mkString(", ") else "None"
+        val openDocs = cs.getOpenDocs
+        val openDocsStr = if (openDocs.nonEmpty) openDocs.mkString(", ") else "None"
         sb.append(s"id: ${cs.id}\n")
         sb.append(s"datetime: ${cs.datetime}\n")
         sb.append(s"params: $paramsStr\n")
-        sb.append(s"foundDocs: $foundDocsStr\n---\n")
+        sb.append(s"foundDocs: $foundDocsStr\n")
+        sb.append(s"openDocs: $openDocsStr\n---\n")
       }
     } else sb.append("No Card Searches found.\n")
 
@@ -34,10 +37,13 @@ class TestParser extends AnyFunSuite {
       sb.append("Query Searches:\n")
       session.quickSearches.foreach { qs =>
         val foundDocsStr = if (qs.foundDocs.nonEmpty) qs.foundDocs.mkString(", ") else "None"
+        val openDocs = qs.getOpenDocs
+        val openDocsStr = if (openDocs.nonEmpty) openDocs.mkString(", ") else "None"
         sb.append(s"id: ${qs.id}\n")
         sb.append(s"datetime: ${qs.datetime}\n")
         sb.append(s"query: ${qs.query}\n")
-        sb.append(s"foundDocs: $foundDocsStr\n---\n")
+        sb.append(s"foundDocs: $foundDocsStr\n")
+        sb.append(s"openDocs: $openDocsStr\n---\n")
       }
     } else sb.append("No Query Searches found.\n")
 

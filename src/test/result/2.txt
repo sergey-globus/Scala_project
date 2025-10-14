@@ -4,58 +4,60 @@ No Card Searches found.
 ==================================================
 Query Searches:
 id: 1482083015
-datetime: 19.02.2020_04:28:36
+datetime: 2020-02-19T04:28:36
 query: вызов на собеседование иностранного гражданина
 foundDocs: CMB_18739, CJI_103337, CJI_119770, CJI_109032, CJI_129430, CJI_121149, CMB_18736, CJI_96053, CJI_99747, PBI_257979, CJI_109597, CJI_131330, CMB_18426, CJI_120332, CJI_88718, CJI_104376, PBI_218541, CMB_18363, ACC_45616, PBI_193270, CJI_105729, CJI_94607, CJI_81622, PBI_227324, CJI_111518, CJI_68848, CJI_110888, CJI_120428, CJI_96764, CJI_101483, CJI_101163, CJI_129452, CMB_18810, CJI_97965, CJI_99962, CJI_97490, CMB_18822, CJI_117558, CMB_18781, CJI_108783, CMB_18916, CMB_18910, CMB_18721, CJI_126681, CJI_68951, CMB_18680, CJI_128496, CJI_97360
+openDocs: CJI_97490, CJI_99747, CJI_97360, CJI_105729, CJI_128496, PBI_227324, CMB_18426
 ---
 id: 106640453
-datetime: 19.02.2020_04:38:06
+datetime: 2020-02-19T04:38:06
 query: 13.07.2020 № 774 приказ министерства культуры Российской Федерации
 foundDocs: PNPA_59388, LAW_367842, PNPA_49762
+openDocs: PNPA_49762, PNPA_59388, LAW_367842, PNPA_49762
 ---
 ==================================================
 Doc Opens:
-datetime: 19.02.2020
+datetime: Some(2020-02-19T04:30:16)
 searchId: 1482083015
 docId: CJI_97490
 ---
-datetime: 19.02.2020
+datetime: Some(2020-02-19T04:32:04)
 searchId: 1482083015
 docId: CJI_99747
 ---
-datetime: 19.02.2020
+datetime: Some(2020-02-19T04:33:36)
 searchId: 1482083015
 docId: CJI_97360
 ---
-datetime: 19.02.2020
+datetime: Some(2020-02-19T04:34:42)
 searchId: 1482083015
 docId: CJI_105729
 ---
-datetime: 19.02.2020
+datetime: Some(2020-02-19T04:36:28)
 searchId: 1482083015
 docId: CJI_128496
 ---
-datetime: 19.02.2020
+datetime: Some(2020-02-19T04:36:32)
 searchId: 1482083015
 docId: PBI_227324
 ---
-datetime: 19.02.2020
+datetime: Some(2020-02-19T04:39:52)
 searchId: 106640453
 docId: PNPA_49762
 ---
-datetime: 19.02.2020
+datetime: Some(2020-02-19T04:39:53)
 searchId: 106640453
 docId: PNPA_59388
 ---
-datetime: 19.02.2020
+datetime: Some(2020-02-19T04:41:10)
 searchId: 106640453
 docId: LAW_367842
 ---
-datetime: 19.02.2020
+datetime: Some(2020-02-19T04:41:25)
 searchId: 106640453
 docId: PNPA_49762
 ---
-datetime: 19.02.2020
+datetime: Some(2020-02-19T04:42:04)
 searchId: 1482083015
 docId: CMB_18426
 ---

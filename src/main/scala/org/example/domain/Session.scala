@@ -1,14 +1,15 @@
 package org.example.domain
 
-import scala.collection.mutable.ListBuffer
+import java.time.LocalDateTime
+import scala.collection.mutable
 
 case class Session(
                     id: String,
-                    cardSearches: ListBuffer[CardSearch] = ListBuffer.empty[CardSearch],
-                    quickSearches: ListBuffer[QuickSearch] = ListBuffer.empty[QuickSearch],
-                    docOpens: ListBuffer[DocOpen] = ListBuffer.empty[DocOpen],
-                    var startDatetime: String = "unknown",
-                    var endDatetime: String = "unknown"
+                    cardSearches: Seq[CardSearch],
+                    quickSearches: Seq[QuickSearch],
+                    docOpens: Seq[DocOpen],
+                    startDatetime: LocalDateTime,
+                    endDatetime: LocalDateTime
                   )
 
 object Session {
@@ -16,70 +17,73 @@ object Session {
   private val prefix: String = "SESSION_START"
   private val postfix: String = "SESSION_END"
 
-  private class InvalidSession(msg: String) extends Exception(msg)
-
   private val allEvent: Seq[EventObject[_ <: Event]] =
     Seq(CardSearch, QuickSearch, DocOpen)
 
-  def empty(fileName: String): Session = Session(fileName)
+  def empty(fileName: String): Session = Session(
+    fileName,
+    mutable.ListBuffer.empty[CardSearch],
+    mutable.ListBuffer.empty[QuickSearch],
+    mutable.ListBuffer.empty[DocOpen],
+    LocalDateTime.MIN,
+    LocalDateTime.MIN
+  )
 
   def parse(
              fileName: String,
              lines: Iterator[String],
              isValidDocId: String => Boolean,
-             extractDateFromDatetime: String => String,
+             extractDatetime: String => Option[LocalDateTime],
              logUnknown: (String, String) => Unit
            ): Session = {
 
-    // --- Проверка первой строки: SESSION_START ---
-    if (!lines.hasNext) throw new InvalidSession("Empty file, no SESSION_START found")
-    val firstLine = lines.next().trim
-    if (!firstLine.startsWith(prefix))
-      throw new InvalidSession(s"First line must be started SESSION_START, found line: $firstLine")
-
-    val session = new Session(fileName)
-
-    // SESSION_START Datetime
-    val startToks = firstLine.split("\\s+")
-    session.startDatetime = startToks.lift(1).getOrElse("unknown")
-    if (startToks.length > 2)
-      logUnknown(fileName, s"Bad SESSION_START line format: $firstLine")
-    if (session.startDatetime == "invalid")
-      logUnknown(fileName, s"Invalid date: ${session.startDatetime}")
+    val ctx = ParseContext(fileName, lines, isValidDocId, extractDatetime, logUnknown)
 
     // --- Обрабатываем события до SESSION_END ---
     var endFound = false
     while (lines.hasNext && !endFound) {
-      val line = lines.next().trim
+      ctx.curLine = lines.next().trim
+
+      // SESSION_START Datetime
+      if (ctx.curLine.startsWith(prefix)) {
+        val toks = ctx.curLine.split("\\s+")
+        if (toks.length != 2)
+          logUnknown(fileName, s"Bad SESSION_START line format: ${ctx.curLine}")
+        else
+          ctx.startDatetime = extractDatetime(toks(1)).getOrElse {
+            logUnknown(fileName, s"Invalid date: ${toks(1)}")
+            LocalDateTime.MIN
+          }
+      }
 
       // SESSION_END Datetime
-      if (line.startsWith(postfix)) {
-        val endToks = line.split("\\s+")
-        session.endDatetime = endToks.lift(1).getOrElse("unknown")
-        if (endToks.length > 2) logUnknown(fileName, s"Bad SESSION_END line format: $line")
-        if (session.endDatetime == "invalid") logUnknown(fileName, s"Invalid date: ${session.endDatetime}")
+      else if (ctx.curLine.startsWith(postfix)) {
+        val toks = ctx.curLine.split("\\s+")
+        if (toks.length != 2)
+          logUnknown(fileName, s"Bad SESSION_END line format: ${ctx.curLine}")
+        else
+          ctx.endDatetime = extractDatetime(toks(1)).getOrElse {
+            logUnknown(fileName, s"Invalid date: ${toks(1)}")
+            LocalDateTime.MIN
+          }
         endFound = true
       }
 
       // --- Начало события ---
-      else if (line.nonEmpty) {
+      else if (ctx.curLine.nonEmpty) {
         val maybeEvent = allEvent.collectFirst {
-          case event if event.matches(line) =>
+          case event if event.matches(ctx.curLine) =>
             // Парсер возвращает объект Event
-            event.parse(fileName, line, lines, isValidDocId, extractDateFromDatetime, logUnknown)
+            event.parse(ctx)
         }
 
         maybeEvent match {
-          case Some(ev) => ev.addToSession(session)
-          case None     => logUnknown(fileName, s"Unknown event: $line")
+          case Some(ev) => ev.addToSession(ctx)
+          case None     => logUnknown(fileName, s"Unknown event: ${ctx.curLine}")
         }
       }
     }
 
-    // --- Проверка: SESSION_END должна быть ---
-    if (!endFound)
-      throw new InvalidSession("SESSION_END not found at the end of file")
-
-    session
+    ctx.buildSession()
   }
 }

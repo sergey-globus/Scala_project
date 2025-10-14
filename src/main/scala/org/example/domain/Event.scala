@@ -1,9 +1,8 @@
 package org.example.domain
 
 trait Event {
-  def addToSession(session: Session): Unit
+  def addToSession(ctx: ParseContext): Unit
 }
-
 
 trait EventObject[T <: Event] {
   protected val prefix: String = ""
@@ -13,12 +12,5 @@ trait EventObject[T <: Event] {
   def matches(line: String): Boolean = line.startsWith(prefix)
 
   // Возвращаем объект Event (точнее "объект-наследник" Event)
-  def parse(
-             fileName: String,
-             startLine: String,
-             lines: Iterator[String],
-             isValidDocId: String => Boolean,
-             extractDateFromDatetime: String => String,
-             logUnknown: (String, String) => Unit
-           ): T
+  def parse(ctx: ParseContext): T
 }

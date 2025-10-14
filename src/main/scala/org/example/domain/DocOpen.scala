@@ -1,43 +1,49 @@
 package org.example.domain
 
-import scala.collection.mutable.ListBuffer
+import java.time.LocalDateTime
+import scala.collection.mutable
 
 case class DocOpen(
-                    datetime: String,
+                    datetime: Option[LocalDateTime],
                     searchId: String,
                     docId: String
                   ) extends Event {
-  override def addToSession(session: Session): Unit =
-    session.docOpens += this
+
+  override def addToSession(ctx: ParseContext): Unit =
+    ctx.docOpens += this
 }
 
 object DocOpen extends EventObject[DocOpen] {
 
   override val prefix: String = "DOC_OPEN"
 
-  def parse(
-             fileName: String,
-             startLine: String,
-             lines: Iterator[String],
-             isValidDocId: String => Boolean,
-             extractDateFromDatetime: String => String,
-             logUnknown: (String, String) => Unit
-           ): DocOpen = {
+  def parse(ctx: ParseContext): DocOpen = {
 
     // DOC_OPEN [datetime] searchId docId
-    val toks = startLine.split("\\s+")
-    val (dtCandidate, searchId, docCandidate) = toks.length match {
-      case 4 => (toks(1), toks(2), toks(3))   // формат с датой
-      case 3 => ("unknown", toks(1), toks(2))  // формат без даты
+    val toks = ctx.curLine.split("\\s+")
+    val (dt, searchId, docId) = toks.length match {
+      case 4 =>      // формат с датой
+        val dtCandidate = ctx.extractDatetime(toks(1)).getOrElse {
+          ctx.logUnknown(ctx.fileName, s"Invalid date: ${toks(1)}")
+          LocalDateTime.MIN
+        }
+        val docCandidate = if (ctx.isValidDocId(toks(3))) toks(3) else {
+          ctx.logUnknown(ctx.fileName, s"Unknown document id: ${toks(3)}")
+          "unknown"
+        }
+        (Some(dtCandidate), toks(2), docCandidate)
+      case 3 =>     // формат без даты
+        val docCandidate = if (ctx.isValidDocId(toks(2))) toks(2) else {
+          ctx.logUnknown(ctx.fileName, s"Unknown document id: ${toks(2)}")
+          "unknown"
+        }
+        (None, toks(1), docCandidate)
       case _ =>
-        logUnknown(fileName, s"Bad DOC_OPEN line format: $startLine")
-        ("unknown", "unknown", "unknown")
+        ctx.logUnknown(ctx.fileName, s"Bad DOC_OPEN line format: ${ctx.curLine}")
+        (Some(LocalDateTime.MIN), "unknown", "unknown")
     }
 
-    val dt = extractDateFromDatetime(dtCandidate)
-    val docId = if (isValidDocId(docCandidate)) docCandidate else "unknown"
-    if (dt == "invalid") logUnknown(fileName, s"Invalid date: $dtCandidate")
-    if (docId == "unknown") logUnknown(fileName, s"Unknown document id: $docCandidate")
+    ctx.attachToSearch(docId, searchId)
 
     DocOpen(dt, searchId, docId)
   }

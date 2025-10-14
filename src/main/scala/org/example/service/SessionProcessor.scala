@@ -1,7 +1,7 @@
 package org.example.service
 
 import scala.collection.mutable
-import org.example.domain._
+import org.example.domain.Session
 
 
 object SessionProcessor {
@@ -17,9 +17,12 @@ object SessionProcessor {
     val docCounts = mutable.Map.empty[(String, String), Int]
 
     session.docOpens.foreach { doc =>
-      val date = doc.datetime
+      val date = doc.datetime match {
+        case Some(dt) => dt.toLocalDate.toString
+        case None => "unknown"
+      }
       val docId = doc.docId
-      if (!dropUnknownDates || (date != "invalid" && docId != "unknown")) {
+      if (!dropUnknownDates) {
         docCounts((date, docId)) = docCounts.getOrElse((date, docId), 0) + 1
       }
     }
