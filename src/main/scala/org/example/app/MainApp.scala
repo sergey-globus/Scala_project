@@ -16,12 +16,11 @@ object MainApp {
     // Парсим сессии
     val sessions = RowDataProcessor.process(sc)
 
-    // Выполняем задачи анализа
+    // Выполняем задачи
     ForDebug.run(sessions)
     Task1.run(sessions)
     Task2.run(sessions, sc)
 
-    // Сохраняем логи в файл
     RowDataProcessor.saveLogs()
 
     spark.stop()
