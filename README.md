@@ -15,7 +15,7 @@ mvn clean package
 
 - Domain - содержит сущности, а также "знает" о том, как парсить события и сессию
 - Infrastructure - слой отвечает за получение и преобразование данных в объекты domain, а также низкоуровневые функции
-- Service - слой бизнес-логики, оперирует объектами domain
+- Analysis - слой бизнес-логики, оперирует объектами domain для вычисления каждой task
 - App - входная точка приложения, запускает обработку и связывает остальные слои, также отвечает за чтение файлов, вывод результатов и работу со Spark
 
 
@@ -68,8 +68,8 @@ InvalidSession: 1
 ```
 (debug) QS total: 17137
 (debug) CARD_SEARCH total: 4345
-ACC_45616 CARD_SEARCH count: 24
-Each document found through QS was opened each day -> result/opens.txt
+(Task1) ACC_45616 CARD_SEARCH count: 24
+(Task2) Each document from QS for each day -> result/opens.txt
 Error logs -> result/logs.txt
 
 Process finished with exit code 0
