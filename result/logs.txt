@@ -1,5 +1,5 @@
-Invalid date: 1
-Unknown event: 1
+Invalid date -> 1
+Unknown event -> 1
 ----------
-123 | Unknown event: START 01.06.2020_18:57:37
 123 | Invalid date: 01.06.202x_18:59:29
+123 | Unknown event: START 01.06.2020_18:57:37

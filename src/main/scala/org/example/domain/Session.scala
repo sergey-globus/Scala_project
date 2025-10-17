@@ -34,7 +34,7 @@ object Session {
              lines: Iterator[String],
              isValidDocId: String => Boolean,
              extractDatetime: String => Option[LocalDateTime],
-             logUnknown: (String, String) => Unit
+             logUnknown: ((String, String)) => Unit
            ): Session = {
 
     val ctx = ParseContext(fileName, lines, isValidDocId, extractDatetime, logUnknown)

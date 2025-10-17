@@ -70,13 +70,16 @@ class TestParser extends AnyFunSuite {
     val resultDir = Paths.get("src/test/result")
     if (!Files.exists(resultDir)) Files.createDirectories(resultDir)
 
+    // Аккумулятор для заглушки
+    val logAcc = new Logger
+
     // Проходим по всем файлам в папке ресурсов
     Files.list(resourcesRoot).iterator().asScala.foreach { filePath =>
       if (Files.isRegularFile(filePath)) {
         val lines = Files.readAllLines(filePath).asScala.iterator
         assert(lines.nonEmpty, s"Файл ${filePath.getFileName} пустой")
 
-        val session = Parser.parseSession(filePath.getFileName.toString, lines)
+        val session = Parser.parseSession(filePath.getFileName.toString, lines, logAcc)
         // Проверяем, что QS и DocOpen правильно распарсились
         assert(session.quickSearches.nonEmpty || session.cardSearches.nonEmpty, s"Файл ${filePath.getFileName}: нет поисковых действий")
         assert(session.docOpens.nonEmpty, s"Файл ${filePath.getFileName}: нет открытых документов")

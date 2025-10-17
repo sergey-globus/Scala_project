@@ -1,6 +1,6 @@
 package org.example.infrastructure
 
-import org.example.domain.Session
+import org.example.domain.{Session, ParseContext}
 
 import java.time._
 import java.time.format._
@@ -25,13 +25,14 @@ object Parser {
     local.orElse(zoned)
   }
 
-  def parseSession(fileName: String, lines: Iterator[String]): Session = {
+  def parseSession(fileName: String, lines: Iterator[String], logAcc: Logger): Session = {
+//    logAcc.reset()
     try {
-      Session.parse(fileName, lines, isValidDocId, extractDatetime, Logger.logUnknown)
+      Session.parse(fileName, lines, isValidDocId, extractDatetime, logAcc.add)
     } catch {
       // при исключении продолжаем вычисления без "ошибочной" сессии
       case ex: Throwable =>
-        Logger.logException(fileName, ex, "parseSession failed")
+        logAcc.addException(fileName, ex, "parseSession failed")
         Session.empty(fileName)
     }
   }

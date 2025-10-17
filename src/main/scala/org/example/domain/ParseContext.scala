@@ -8,7 +8,7 @@ case class ParseContext(
                          lines: Iterator[String],
                          isValidDocId: String => Boolean,
                          extractDatetime: String => Option[LocalDateTime],
-                         logUnknown: (String, String) => Unit
+                         logUnknown: ((String, String)) => Unit
                        ) {
   var curLine = ""
   var startDatetime: LocalDateTime = LocalDateTime.MIN
