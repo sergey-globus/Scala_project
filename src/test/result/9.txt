@@ -17,39 +17,39 @@ openDocs: QSBO_11121, PKBO_31213, LAW_24660
 ---
 ==================================================
 Doc Opens:
-datetime: Some(2020-06-11T15:11:48)
+datetime: 2020-06-11T15:11:48
 searchId: 4085868
 docId: LAW_350756
 ---
-datetime: Some(2020-06-11T15:12:55)
+datetime: 2020-06-11T15:12:55
 searchId: 4085868
 docId: CMB_18225
 ---
-datetime: Some(2020-06-11T15:13:26)
+datetime: 2020-06-11T15:13:26
 searchId: 4085868
 docId: LAW_361359
 ---
-datetime: Some(2020-06-11T15:14:13)
+datetime: 2020-06-11T15:14:13
 searchId: 4085868
 docId: LAW_348605
 ---
-datetime: Some(2020-06-11T15:14:44)
+datetime: 2020-06-11T15:14:44
 searchId: 4085868
 docId: LAW_333988
 ---
-datetime: Some(2020-06-11T15:16)
+datetime: 2020-06-11T15:16
 searchId: 4085868
 docId: LAW_361108
 ---
-datetime: Some(2020-06-11T15:17:26)
+datetime: 2020-06-11T15:17:26
 searchId: 271453736
 docId: QSBO_11121
 ---
-datetime: Some(2020-06-11T15:19:24)
+datetime: 2020-06-11T15:19:24
 searchId: 271453736
 docId: PKBO_31213
 ---
-datetime: Some(2020-06-11T15:21:08)
+datetime: 2020-06-11T15:21:08
 searchId: 271453736
 docId: LAW_24660
 ---

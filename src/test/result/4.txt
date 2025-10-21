@@ -17,19 +17,19 @@ openDocs: LAW_368672
 ---
 ==================================================
 Doc Opens:
-datetime: Some(2020-03-21T08:20:12)
+datetime: 2020-03-21T08:20:12
 searchId: 24455574
 docId: STR_1958
 ---
-datetime: Some(2020-03-21T08:20:43)
+datetime: 2020-03-21T08:20:43
 searchId: 24455574
 docId: PAS_596656
 ---
-datetime: Some(2020-03-21T08:22:56)
+datetime: 2020-03-21T08:22:56
 searchId: 203770859
 docId: LAW_368672
 ---
-datetime: Some(2020-03-21T08:24:05)
+datetime: 2020-03-21T08:24:05
 searchId: 24455574
 docId: STR_1958
 ---

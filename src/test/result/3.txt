@@ -17,43 +17,43 @@ openDocs: DOF_71907, QUEST_178353, DOF_33413, DOF_71907, DOF_71907, PBI_251508
 ---
 ==================================================
 Doc Opens:
-datetime: Some(2020-06-30T23:00:16)
+datetime: 2020-06-30T23:00:16
 searchId: 24743895
 docId: EXPZ_741518
 ---
-datetime: Some(2020-06-30T23:00:54)
+datetime: 2020-06-30T23:00:54
 searchId: 24743895
 docId: ACC_45614
 ---
-datetime: Some(2020-06-30T23:01:02)
+datetime: 2020-06-30T23:01:02
 searchId: 24743895
 docId: EXPZ_741518
 ---
-datetime: Some(2020-06-30T23:01:18)
+datetime: 2020-06-30T23:01:18
 searchId: 24743895
 docId: ACC_45614
 ---
-datetime: Some(2020-06-30T23:01:45)
+datetime: 2020-06-30T23:01:45
 searchId: 545153481
 docId: DOF_71907
 ---
-datetime: Some(2020-06-30T23:02:10)
+datetime: 2020-06-30T23:02:10
 searchId: 545153481
 docId: QUEST_178353
 ---
-datetime: Some(2020-06-30T23:02:17)
+datetime: 2020-06-30T23:02:17
 searchId: 545153481
 docId: DOF_33413
 ---
-datetime: Some(2020-06-30T23:04)
+datetime: 2020-06-30T23:04
 searchId: 545153481
 docId: DOF_71907
 ---
-datetime: Some(2020-06-30T23:05:34)
+datetime: 2020-06-30T23:05:34
 searchId: 545153481
 docId: DOF_71907
 ---
-datetime: Some(2020-06-30T23:06:02)
+datetime: 2020-06-30T23:06:02
 searchId: 545153481
 docId: PBI_251508
 ---

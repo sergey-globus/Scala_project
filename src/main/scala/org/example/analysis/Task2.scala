@@ -7,7 +7,7 @@ import org.example.infrastructure.FileMerger
 
 object Task2 {
 
-  private val outputDir: String = "result"
+  private val outputDir = "result"
 
   def run(sessions: RDD[Session], sc: org.apache.spark.SparkContext): Unit = {
     val fs = FileSystem.get(sc.hadoopConfiguration)
@@ -17,16 +17,17 @@ object Task2 {
     if (fs.exists(opensPath)) fs.delete(opensPath, true)
     if (fs.exists(finalOpens)) fs.delete(finalOpens, false)
 
-    val allDocCounts = sessions.flatMap { session =>
-      session.docOpens.map { doc =>
-        val date = doc.datetime.map(_.toLocalDate.toString).getOrElse("unknown")
-        ((date, doc.docId), 1)
+    val quickSearchDocCounts = sessions.flatMap { session =>
+      session.quickSearches.flatMap { qs =>
+        val date = qs.datetime.toLocalDate.toString
+        qs.openDocs.map(docId => ((date, docId), 1))
       }
     }.reduceByKey(_ + _)
 
-    allDocCounts
+    quickSearchDocCounts
       .map { case ((date, docId), cnt) => s"$date\t$docId\t$cnt" }
       .saveAsTextFile(opensPath.toString)
+
 
     FileMerger.mergeFiles(fs, opensPath, finalOpens)
 

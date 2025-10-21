@@ -17,47 +17,47 @@ openDocs: OTN_5980, OTN_19764, STR_17732, LAW_84888, PAP_9593
 ---
 ==================================================
 Doc Opens:
-datetime: Some(2020-02-13T07:50:25)
+datetime: 2020-02-13T07:50:25
 searchId: 4199765
 docId: CMB_18794
 ---
-datetime: Some(2020-02-13T07:51:28)
+datetime: 2020-02-13T07:51:28
 searchId: 4199765
 docId: LAW_282273
 ---
-datetime: Some(2020-02-13T07:52:08)
+datetime: 2020-02-13T07:52:08
 searchId: 4199765
 docId: LAW_327769
 ---
-datetime: Some(2020-02-13T07:52:57)
+datetime: 2020-02-13T07:52:57
 searchId: 4199765
 docId: LAW_354370
 ---
-datetime: Some(2020-02-13T07:53:33)
+datetime: 2020-02-13T07:53:33
 searchId: 4199765
 docId: LAW_35276
 ---
-datetime: Some(2020-02-13T07:54:41)
+datetime: 2020-02-13T07:54:41
 searchId: 4199765
 docId: PBI_257299
 ---
-datetime: Some(2020-02-13T07:56:26)
+datetime: 2020-02-13T07:56:26
 searchId: 10724234
 docId: OTN_5980
 ---
-datetime: Some(2020-02-13T07:57:04)
+datetime: 2020-02-13T07:57:04
 searchId: 10724234
 docId: OTN_19764
 ---
-datetime: Some(2020-02-13T07:58:06)
+datetime: 2020-02-13T07:58:06
 searchId: 10724234
 docId: STR_17732
 ---
-datetime: Some(2020-02-13T07:59:33)
+datetime: 2020-02-13T07:59:33
 searchId: 10724234
 docId: LAW_84888
 ---
-datetime: Some(2020-02-13T07:59:53)
+datetime: 2020-02-13T07:59:53
 searchId: 10724234
 docId: PAP_9593
 ---

@@ -17,51 +17,51 @@ openDocs: PKBO_44783, PKV_1417, CJI_131562, PBI_236035, PBI_236035
 ---
 ==================================================
 Doc Opens:
-datetime: Some(2020-05-03T20:38:16)
+datetime: 2020-05-03T20:38:16
 searchId: 27620928
 docId: CMB_16119
 ---
-datetime: Some(2020-05-03T20:39:16)
+datetime: 2020-05-03T20:39:16
 searchId: 27620928
 docId: CJI_115739
 ---
-datetime: Some(2020-05-03T20:40:39)
+datetime: 2020-05-03T20:40:39
 searchId: 27620928
 docId: CMB_18521
 ---
-datetime: Some(2020-05-03T20:41:51)
+datetime: 2020-05-03T20:41:51
 searchId: 27620928
 docId: CJI_42460
 ---
-datetime: Some(2020-05-03T20:42:04)
+datetime: 2020-05-03T20:42:04
 searchId: 27620928
 docId: CMB_17512
 ---
-datetime: Some(2020-05-03T20:42:20)
+datetime: 2020-05-03T20:42:20
 searchId: 27620928
 docId: CMB_16702
 ---
-datetime: Some(2020-05-03T20:43:51)
+datetime: 2020-05-03T20:43:51
 searchId: 1214120390
 docId: PKBO_44783
 ---
-datetime: Some(2020-05-03T20:45:05)
+datetime: 2020-05-03T20:45:05
 searchId: 1214120390
 docId: PKV_1417
 ---
-datetime: Some(2020-05-03T20:46:01)
+datetime: 2020-05-03T20:46:01
 searchId: 1214120390
 docId: CJI_131562
 ---
-datetime: Some(2020-05-03T20:46:48)
+datetime: 2020-05-03T20:46:48
 searchId: 1214120390
 docId: PBI_236035
 ---
-datetime: Some(2020-05-03T20:47:31)
+datetime: 2020-05-03T20:47:31
 searchId: 1214120390
 docId: PBI_236035
 ---
-datetime: Some(2020-05-03T20:47:47)
+datetime: 2020-05-03T20:47:47
 searchId: 27620928
 docId: CMB_10064
 ---

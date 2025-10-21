@@ -5,8 +5,8 @@ trait Event {
 }
 
 trait EventObject[T <: Event] {
-  protected val prefix: String = ""
-  protected val postfix: String = ""
+  protected val prefix = ""
+  protected val postfix = ""
 
   // Проверка на начало события (по умолчанию - если строка начинается с префикса события)
   def matches(line: String): Boolean = line.startsWith(prefix)

@@ -1,23 +1,28 @@
 package org.example.domain
 
+import org.example.domain.events.{CardSearch, DocOpen, QuickSearch}
+
 import java.time.LocalDateTime
 import scala.collection.mutable
+
+import scala.util.Try
+
 
 case class Session(
                     id: String,
                     cardSearches: Seq[CardSearch],
                     quickSearches: Seq[QuickSearch],
                     docOpens: Seq[DocOpen],
-                    startDatetime: LocalDateTime,
-                    endDatetime: LocalDateTime
+                    startDatetime: Option[LocalDateTime],
+                    endDatetime: Option[LocalDateTime]
                   )
 
 object Session {
 
-  private val prefix: String = "SESSION_START"
-  private val postfix: String = "SESSION_END"
+  private val prefix = "SESSION_START"
+  private val postfix = "SESSION_END"
 
-  private val allEvent: Seq[EventObject[_ <: Event]] =
+    private val allEventObjects: Seq[EventObject[_ <: Event]] =
     Seq(CardSearch, QuickSearch, DocOpen)
 
   def empty(fileName: String): Session = Session(
@@ -25,16 +30,17 @@ object Session {
     mutable.ListBuffer.empty[CardSearch],
     mutable.ListBuffer.empty[QuickSearch],
     mutable.ListBuffer.empty[DocOpen],
-    LocalDateTime.MIN,
-    LocalDateTime.MIN
+    None,
+    None
   )
 
   def parse(
              fileName: String,
              lines: Iterator[String],
              isValidDocId: String => Boolean,
-             extractDatetime: String => Option[LocalDateTime],
-             logUnknown: ((String, String)) => Unit
+             extractDatetime: String => LocalDateTime,
+             logUnknown: ((String, String)) => Unit,
+             addException: (String, Throwable, String) => Unit
            ): Session = {
 
     val ctx = ParseContext(fileName, lines, isValidDocId, extractDatetime, logUnknown)
@@ -42,47 +48,39 @@ object Session {
     // --- Обрабатываем события до SESSION_END ---
     var endFound = false
     while (lines.hasNext && !endFound) {
-      ctx.curLine = lines.next().trim
+      ctx.curLine = lines.next()
 
       // SESSION_START Datetime
       if (ctx.curLine.startsWith(prefix)) {
         val toks = ctx.curLine.split("\\s+")
-        if (toks.length != 2)
-          logUnknown(fileName, s"Bad SESSION_START line format: ${ctx.curLine}")
-        else
-          ctx.startDatetime = extractDatetime(toks(1)).getOrElse {
-            logUnknown(fileName, s"Invalid date: ${toks(1)}")
-            LocalDateTime.MIN
-          }
+        ctx.startDatetime = Option(extractDatetime(toks(1)))
       }
 
       // SESSION_END Datetime
       else if (ctx.curLine.startsWith(postfix)) {
         val toks = ctx.curLine.split("\\s+")
-        if (toks.length != 2)
-          logUnknown(fileName, s"Bad SESSION_END line format: ${ctx.curLine}")
-        else
-          ctx.endDatetime = extractDatetime(toks(1)).getOrElse {
-            logUnknown(fileName, s"Invalid date: ${toks(1)}")
-            LocalDateTime.MIN
-          }
+        ctx.endDatetime = Option(extractDatetime(toks(1)))
         endFound = true
       }
 
       // --- Начало события ---
-      else if (ctx.curLine.nonEmpty) {
-        val maybeEvent = allEvent.collectFirst {
-          case event if event.matches(ctx.curLine) =>
-            // Парсер возвращает объект Event
-            event.parse(ctx)
-        }
-
-        maybeEvent match {
-          case Some(ev) => ev.addToSession(ctx)
-          case None     => logUnknown(fileName, s"Unknown event: ${ctx.curLine}")
+      else {
+        allEventObjects.find(_.matches(ctx.curLine)) match {
+          case Some(event) =>
+            try {
+              event.parse(ctx)
+            } catch {
+              case ex: Throwable =>
+                addException(fileName, ex, s"Parsing event failed on: ${ctx.curLine}")
+            }
+          case None => logUnknown(fileName, s"Unknown event: ${ctx.curLine}")
         }
       }
+
     }
+
+    if (endFound && lines.hasNext)
+      logUnknown(fileName, s"[WARNING] Lines after SESSION_END")
 
     ctx.buildSession()
   }

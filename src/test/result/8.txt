@@ -17,31 +17,31 @@ openDocs: CJI_130041, CJI_130041, CJI_127212, CJI_126304, CJI_130041, CJI_127266
 ---
 ==================================================
 Doc Opens:
-datetime: Some(2020-01-30T21:01:26)
+datetime: 2020-01-30T21:01:26
 searchId: 1212899989
 docId: LAW_347760
 ---
-datetime: Some(2020-01-30T21:02:57)
+datetime: 2020-01-30T21:02:57
 searchId: 156344218
 docId: CJI_130041
 ---
-datetime: Some(2020-01-30T21:03)
+datetime: 2020-01-30T21:03
 searchId: 156344218
 docId: CJI_130041
 ---
-datetime: Some(2020-01-30T21:04:46)
+datetime: 2020-01-30T21:04:46
 searchId: 156344218
 docId: CJI_127212
 ---
-datetime: Some(2020-01-30T21:05:03)
+datetime: 2020-01-30T21:05:03
 searchId: 156344218
 docId: CJI_126304
 ---
-datetime: Some(2020-01-30T21:05:18)
+datetime: 2020-01-30T21:05:18
 searchId: 156344218
 docId: CJI_130041
 ---
-datetime: Some(2020-01-30T21:05:35)
+datetime: 2020-01-30T21:05:35
 searchId: 156344218
 docId: CJI_127266
 ---

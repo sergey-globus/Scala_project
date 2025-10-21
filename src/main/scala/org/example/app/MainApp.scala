@@ -1,7 +1,7 @@
 package org.example.app
 
 import org.apache.spark.sql.SparkSession
-import org.example.parser.RowDataProcessor
+import org.example.parser.RawDataProcessor
 import org.example.analysis.{Task1, Task2, ForDebug}
 
 object MainApp {
@@ -14,14 +14,14 @@ object MainApp {
     val sc = spark.sparkContext
 
     // Парсим сессии
-    val sessions = RowDataProcessor.process(sc)
+    val sessions = RawDataProcessor.process(sc)
 
     // Выполняем задачи
     ForDebug.run(sessions)
     Task1.run(sessions)
     Task2.run(sessions, sc)
 
-    RowDataProcessor.saveLogs()
+    RawDataProcessor.saveLogs()
 
     spark.stop()
   }

@@ -4,7 +4,7 @@ No Card Searches found.
 ==================================================
 Query Searches:
 id: 155175031
-datetime: -999999999-01-01T00:00
+datetime: 2020-07-01T13:42:01
 query: пот в строительстве
 foundDocs: None
 openDocs: CJI_126024
@@ -17,11 +17,11 @@ openDocs: PBI_261699
 ---
 ==================================================
 Doc Opens:
-datetime: Some(2020-07-01T13:48:17)
+datetime: 2020-07-01T13:48:17
 searchId: 12246827
 docId: PBI_261699
 ---
-datetime: Some(2020-07-01T13:53:24)
+datetime: 2020-07-01T13:53:24
 searchId: 155175031
 docId: CJI_126024
 ---

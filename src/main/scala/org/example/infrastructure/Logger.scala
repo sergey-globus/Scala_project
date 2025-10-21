@@ -52,11 +52,11 @@ class Logger extends AccumulatorV2[(String, String), LogData] {
     if (buf.size < maxLog) {
       val stack = ex.getStackTrace.take(3).map(_.toString).mkString("\n    at ")
       val msg =
-        s"""$fileName | Exception${if (context.nonEmpty) s" ($context)" else ""}:
-                      |  Type: ${ex.getClass.getSimpleName}
-                      |  Message: ${ex.getMessage}
+        s"""$fileName | Type: ${ex.getClass.getSimpleName}
+                      |  $context
+                      |  ${ex.getMessage}
                       |  Stack trace:
-                      |      at $stack
+                      |    $stack
                       |""".stripMargin
       buf += msg
     }

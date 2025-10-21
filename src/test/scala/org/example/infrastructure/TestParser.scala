@@ -5,8 +5,36 @@ import org.scalatest.funsuite.AnyFunSuite
 import java.nio.file.{Files, Paths, StandardOpenOption}
 import java.nio.charset.StandardCharsets
 import scala.collection.JavaConverters._ // для Scala 2.12
+import scala.io.Source
+import ujson._  // лёгкая JSON-библиотека
+
+case class ExpectedSessionStats(
+                                 quickSearchCount: Int,
+                                 cardSearchCount: Int,
+                                 docOpenCount: Int
+                               )
 
 class TestParser extends AnyFunSuite {
+
+  private def loadExpected(): Map[String, ExpectedSessionStats] = {
+    val path = Paths.get("src/test/expected.json")
+    assert(Files.exists(path), s"Файл ожиданий не найден: $path")
+
+    val source = Source.fromFile(path.toFile, "UTF-8")
+    val jsonStr = source.mkString
+    val json = ujson.read(jsonStr)
+    source.close()
+
+    json.obj.map { case (name, v) =>
+      name -> ExpectedSessionStats(
+        quickSearchCount = v("quickSearchCount").num.toInt,
+        cardSearchCount  = v("cardSearchCount").num.toInt,
+        docOpenCount     = v("docOpenCount").num.toInt
+      )
+    }.toMap
+  }
+
+
 
   private def debugSessionToString(session: org.example.domain.Session): String = {
     val sb = new StringBuilder
@@ -62,7 +90,7 @@ class TestParser extends AnyFunSuite {
     sb.toString()
   }
 
-  test("Парсер должен корректно разбирать все сессии по событиям") {
+  test("Парсер корректно разбирает все сессии и совпадает с ожиданиями") {
     val resourcesRootUrl = getClass.getResource("/")
     assert(resourcesRootUrl != null, "Папка ресурсов не найдена!")
 
@@ -70,25 +98,46 @@ class TestParser extends AnyFunSuite {
     val resultDir = Paths.get("src/test/result")
     if (!Files.exists(resultDir)) Files.createDirectories(resultDir)
 
-    // Аккумулятор для заглушки
     val logAcc = new Logger
+    val expected = loadExpected()
 
-    // Проходим по всем файлам в папке ресурсов
+    val errors = scala.collection.mutable.ListBuffer.empty[String]
+
     Files.list(resourcesRoot).iterator().asScala.foreach { filePath =>
       if (Files.isRegularFile(filePath)) {
         val lines = Files.readAllLines(filePath).asScala.iterator
-        assert(lines.nonEmpty, s"Файл ${filePath.getFileName} пустой")
+        val fname = filePath.getFileName.toString
 
-        val session = Parser.parseSession(filePath.getFileName.toString, lines, logAcc)
-        // Проверяем, что QS и DocOpen правильно распарсились
-        assert(session.quickSearches.nonEmpty || session.cardSearches.nonEmpty, s"Файл ${filePath.getFileName}: нет поисковых действий")
-        assert(session.docOpens.nonEmpty, s"Файл ${filePath.getFileName}: нет открытых документов")
+        val session = Parser.parseSession(fname, lines, logAcc)
 
-        // Создаём debug-файл в src/test/result
+        expected.get(fname) match {
+          case Some(exp) =>
+            if (session.quickSearches.size != exp.quickSearchCount)
+              errors += s"$fname: QS mismatch, expected ${exp.quickSearchCount}, actual ${session.quickSearches.size}"
+            if (session.cardSearches.size != exp.cardSearchCount)
+              errors += s"$fname: CS mismatch, expected ${exp.cardSearchCount}, actual ${session.cardSearches.size}"
+            if (session.docOpens.size != exp.docOpenCount)
+              errors += s"$fname: DocOpen mismatch, expected ${exp.docOpenCount}, actual ${session.docOpens.size}"
+
+          case None =>
+            info(s"Нет проверок для $fname — только debug сохранён")
+        }
+
         val debugPath = resultDir.resolve(s"${filePath.getFileName.toString}.txt")
         val debugStr = debugSessionToString(session)
-        Files.write(debugPath, debugStr.getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)
+        Files.write(debugPath, debugStr.getBytes(StandardCharsets.UTF_8),
+          StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)
       }
     }
+
+    // Выводим все ошибки и падаем, если они есть
+    if (errors.nonEmpty) {
+      println("Найдены ошибки в сессиях:")
+      errors.foreach(println)
+      fail(s"Всего ${errors.size} несоответствий")
+    }
+    else
+      println("Все тесты пройдены!")
   }
+
 }

@@ -12,27 +12,22 @@ object Parser {
   private def isValidDocId(token: String): Boolean =
     token != null && token.matches("""[A-Z0-9]{1,15}_\d{1,10}""")
 
-  private def extractDatetime(dt: String): Option[LocalDateTime] = {
+  private def extractDatetime(dt: String): LocalDateTime = {
     val format1 = DateTimeFormatter.ofPattern("dd.MM.yyyy_HH:mm:ss")
     val format2 = DateTimeFormatter.ofPattern("EEE,_d_MMM_yyyy_HH:mm:ss_Z", java.util.Locale.ENGLISH)
 
-    // Пробуем format1
-    val local = Try(LocalDateTime.parse(dt, format1)).toOption
-    // Пробуем format2
-    val zoned = Try(ZonedDateTime.parse(dt, format2)).toOption.map(_.toLocalDateTime)
-
-    // Возвращаем первый успешный результат (либо None)
-    local.orElse(zoned)
+    Try(LocalDateTime.parse(dt, format1))
+      .orElse(Try(ZonedDateTime.parse(dt, format2).toLocalDateTime))
+      .getOrElse(null)
   }
 
   def parseSession(fileName: String, lines: Iterator[String], logAcc: Logger): Session = {
-//    logAcc.reset()
     try {
-      Session.parse(fileName, lines, isValidDocId, extractDatetime, logAcc.add)
+      Session.parse(fileName, lines, isValidDocId, extractDatetime, logAcc.add, logAcc.addException)
     } catch {
       // при исключении продолжаем вычисления без "ошибочной" сессии
       case ex: Throwable =>
-        logAcc.addException(fileName, ex, "parseSession failed")
+        logAcc.addException(fileName, ex, "Parsing session failed")
         Session.empty(fileName)
     }
   }

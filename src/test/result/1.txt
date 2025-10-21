@@ -17,51 +17,51 @@ openDocs: PSG_42, CJI_110103, CJI_120812, QUEST_166943, PSG_42, CJI_101419
 ---
 ==================================================
 Doc Opens:
-datetime: Some(2020-04-13T22:18:11)
+datetime: 2020-04-13T22:18:11
 searchId: 1399238629
 docId: PBI_257459
 ---
-datetime: Some(2020-04-13T22:19:47)
+datetime: 2020-04-13T22:19:47
 searchId: 1399238629
 docId: CMB_18716
 ---
-datetime: Some(2020-04-13T22:19:52)
+datetime: 2020-04-13T22:19:52
 searchId: 1399238629
 docId: CMB_18544
 ---
-datetime: Some(2020-04-13T22:21:45)
+datetime: 2020-04-13T22:21:45
 searchId: 1399238629
 docId: CMB_18941
 ---
-datetime: Some(2020-04-13T22:23)
+datetime: 2020-04-13T22:23
 searchId: 1399238629
 docId: PBI_257459
 ---
-datetime: Some(2020-04-13T22:24:07)
+datetime: 2020-04-13T22:24:07
 searchId: 1399238629
 docId: CJI_111476
 ---
-datetime: Some(2020-04-13T22:27:43)
+datetime: 2020-04-13T22:27:43
 searchId: -760458026
 docId: PSG_42
 ---
-datetime: Some(2020-04-13T22:28:18)
+datetime: 2020-04-13T22:28:18
 searchId: -760458026
 docId: CJI_110103
 ---
-datetime: Some(2020-04-13T22:29:59)
+datetime: 2020-04-13T22:29:59
 searchId: -760458026
 docId: CJI_120812
 ---
-datetime: Some(2020-04-13T22:30:20)
+datetime: 2020-04-13T22:30:20
 searchId: -760458026
 docId: QUEST_166943
 ---
-datetime: Some(2020-04-13T22:31:59)
+datetime: 2020-04-13T22:31:59
 searchId: -760458026
 docId: PSG_42
 ---
-datetime: Some(2020-04-13T22:32:05)
+datetime: 2020-04-13T22:32:05
 searchId: -760458026
 docId: CJI_101419
 ---

@@ -17,31 +17,31 @@ openDocs: LAW_179199
 No Query Searches found.
 ==================================================
 Doc Opens:
-datetime: None
+datetime: 2020-04-23T21:21:03
 searchId: 211758114
 docId: DOF_85886
 ---
-datetime: None
+datetime: 2020-04-23T21:21:03
 searchId: 211758114
 docId: DOF_91792
 ---
-datetime: None
+datetime: 2020-04-23T21:21:03
 searchId: 211758114
 docId: RZR_209425
 ---
-datetime: None
+datetime: 2020-04-23T21:21:03
 searchId: 211758114
 docId: DOF_100457
 ---
-datetime: None
+datetime: 2020-04-23T21:21:03
 searchId: 211758114
 docId: DOF_85870
 ---
-datetime: None
+datetime: 2020-04-23T21:21:03
 searchId: 211758114
 docId: PBI_199912
 ---
-datetime: None
+datetime: 2020-04-23T21:28:42
 searchId: 162106546
 docId: LAW_179199
 ---

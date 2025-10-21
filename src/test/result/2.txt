@@ -17,47 +17,47 @@ openDocs: PNPA_49762, PNPA_59388, LAW_367842, PNPA_49762
 ---
 ==================================================
 Doc Opens:
-datetime: Some(2020-02-19T04:30:16)
+datetime: 2020-02-19T04:30:16
 searchId: 1482083015
 docId: CJI_97490
 ---
-datetime: Some(2020-02-19T04:32:04)
+datetime: 2020-02-19T04:32:04
 searchId: 1482083015
 docId: CJI_99747
 ---
-datetime: Some(2020-02-19T04:33:36)
+datetime: 2020-02-19T04:33:36
 searchId: 1482083015
 docId: CJI_97360
 ---
-datetime: Some(2020-02-19T04:34:42)
+datetime: 2020-02-19T04:34:42
 searchId: 1482083015
 docId: CJI_105729
 ---
-datetime: Some(2020-02-19T04:36:28)
+datetime: 2020-02-19T04:36:28
 searchId: 1482083015
 docId: CJI_128496
 ---
-datetime: Some(2020-02-19T04:36:32)
+datetime: 2020-02-19T04:36:32
 searchId: 1482083015
 docId: PBI_227324
 ---
-datetime: Some(2020-02-19T04:39:52)
+datetime: 2020-02-19T04:39:52
 searchId: 106640453
 docId: PNPA_49762
 ---
-datetime: Some(2020-02-19T04:39:53)
+datetime: 2020-02-19T04:39:53
 searchId: 106640453
 docId: PNPA_59388
 ---
-datetime: Some(2020-02-19T04:41:10)
+datetime: 2020-02-19T04:41:10
 searchId: 106640453
 docId: LAW_367842
 ---
-datetime: Some(2020-02-19T04:41:25)
+datetime: 2020-02-19T04:41:25
 searchId: 106640453
 docId: PNPA_49762
 ---
-datetime: Some(2020-02-19T04:42:04)
+datetime: 2020-02-19T04:42:04
 searchId: 1482083015
 docId: CMB_18426
 ---
