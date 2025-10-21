@@ -17,6 +17,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <!-- Стабильные версии для транзитивных зависимостей -->
     <dependencyManagement>
         <dependencies>
             <!-- Netty -->
