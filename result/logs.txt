@@ -10,9 +10,9 @@ Unknown event -> 1
     at org.example.model.events.DocOpen.<init>(DocOpen.scala:13)
     at org.example.model.events.DocOpen$.parse(DocOpen.scala:46)
 
-0 | Type: MatchError
-  Parsing event failed on: DOC_OPEN 01.07.2020_13:43:24 155175031 CJI_118221 m n
-  6 (of class java.lang.Integer)
+123 | Type: MatchError
+  Parsing event failed on: DOC_OPEN 01.06.2020_18:59:30 10156928 LAW_367720 zzzzzzzz
+  5 (of class java.lang.Integer)
   Stack trace:
     org.example.model.events.DocOpen$.parse(DocOpen.scala:29)
     at org.example.model.events.DocOpen$.parse(DocOpen.scala:21)
