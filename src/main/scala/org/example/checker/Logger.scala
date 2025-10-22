@@ -1,4 +1,4 @@
-package org.example.infrastructure
+package org.example.checker
 
 import org.apache.spark.util.AccumulatorV2
 import scala.collection.mutable
@@ -45,7 +45,7 @@ class Logger extends AccumulatorV2[(String, String), LogData] {
   }
 
   def addException(fileName: String, ex: Throwable, context: String = ""): Unit = synchronized {
-    val et = ex.getClass.getSimpleName
+    val et = ex.getClass.getSimpleName + " in " + ex.getStackTrace.headOption.map(_.toString)
     counts(et) = counts.getOrElse(et, 0) + 1
 
     val buf = examples.getOrElseUpdate(et, mutable.ListBuffer.empty[String])

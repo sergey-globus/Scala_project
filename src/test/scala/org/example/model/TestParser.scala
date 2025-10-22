@@ -1,12 +1,13 @@
 // src/test/scala/org/example/infrastructure/TestParser.scala
-package org.example.infrastructure
+package org.example.model
 
+import org.example.checker.Logger
 import org.scalatest.funsuite.AnyFunSuite
-import java.nio.file.{Files, Paths, StandardOpenOption}
+
 import java.nio.charset.StandardCharsets
-import scala.collection.JavaConverters._ // для Scala 2.12
+import java.nio.file.{Files, Paths, StandardOpenOption}
+import scala.collection.JavaConverters._
 import scala.io.Source
-import ujson._  // лёгкая JSON-библиотека
 
 case class ExpectedSessionStats(
                                  quickSearchCount: Int,
@@ -36,7 +37,7 @@ class TestParser extends AnyFunSuite {
 
 
 
-  private def debugSessionToString(session: org.example.domain.Session): String = {
+  private def debugSessionToString(session: org.example.model.Session): String = {
     val sb = new StringBuilder
     sb.append(s"Session ID: ${session.id}\n\n")
 
@@ -108,7 +109,7 @@ class TestParser extends AnyFunSuite {
         val lines = Files.readAllLines(filePath).asScala.iterator
         val fname = filePath.getFileName.toString
 
-        val session = Parser.parseSession(fname, lines, logAcc)
+        val session = Session.parse(ParseContext(fname, lines, logAcc))
 
         expected.get(fname) match {
           case Some(exp) =>

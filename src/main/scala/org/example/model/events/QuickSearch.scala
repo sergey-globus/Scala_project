@@ -1,6 +1,7 @@
-package org.example.domain.events
+package org.example.model.events
 
-import org.example.domain.{EventObject, ParseContext, SearchEvent}
+import org.example.checker.Validator.{extractDatetime, isValidDocId}
+import org.example.model.{EventObject, ParseContext, SearchEvent}
 
 import java.time.LocalDateTime
 
@@ -26,13 +27,13 @@ object QuickSearch extends EventObject[QuickSearch] {
 
     // --- QS datetime {query} ---
     var toks = ctx.curLine.split("\\s+", 3)
-    val dt = ctx.extractDatetime(toks(1))
+    val dt = extractDatetime(toks(1))
     val queryRow = toks(2)
     val query =
       if (queryRow.startsWith("{") && queryRow.endsWith("}"))
         queryRow.drop(1).dropRight(1)
       else {
-        ctx.logUnknown(ctx.fileName, s"Bad query format: ${ctx.curLine}")
+        ctx.logAcc.add(ctx.fileName, s"Bad query format: ${ctx.curLine}")
         "unknown"
       }
 
@@ -41,8 +42,8 @@ object QuickSearch extends EventObject[QuickSearch] {
     toks = ctx.curLine.split("\\s+")
     val id = toks.head
     val docs = toks.tail
-    docs.foreach(doc => if (!ctx.isValidDocId(doc))
-      ctx.logUnknown(ctx.fileName, s"[WARNING] Invalid DocId: $doc"))
+    docs.foreach(doc => if (!isValidDocId(doc))
+      ctx.logAcc.add(ctx.fileName, s"[WARNING] Invalid DocId: $doc"))
 
 
     val qs = QuickSearch(id, dt, query, docs)

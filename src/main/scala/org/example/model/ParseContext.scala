@@ -1,17 +1,13 @@
-package org.example.domain
+package org.example.model
 
-import org.example.domain.events.{CardSearch, DocOpen, QuickSearch}
+import org.example.checker.Logger
+import org.example.model.events.{CardSearch, DocOpen, QuickSearch}
 
 import java.time.LocalDateTime
 import scala.collection.mutable
 
-case class ParseContext(
-                         fileName: String,
-                         lines: Iterator[String],
-                         isValidDocId: String => Boolean,
-                         extractDatetime: String => LocalDateTime,
-                         logUnknown: ((String, String)) => Unit
-                       ) {
+case class ParseContext(fileName: String, lines: Iterator[String], logAcc: Logger) {
+
   var curLine = ""
   var startDatetime: Option[LocalDateTime] = None
   var endDatetime: Option[LocalDateTime] = None
@@ -29,7 +25,7 @@ case class ParseContext(
 //          searchEvent.addOpenDoc(docId)
 //        else
 //          logUnknown(fileName, s"DOC_OPEN not in foundDocs: $searchId -> $docId")
-      case None => logUnknown(fileName, s"[WARNING] Orphan DOC_OPEN: $searchId -> $docId")
+      case None => logAcc.add(fileName, s"[WARNING] Orphan DOC_OPEN: $searchId -> $docId")
     }
   }
 

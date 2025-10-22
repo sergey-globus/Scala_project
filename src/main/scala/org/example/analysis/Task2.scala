@@ -2,8 +2,8 @@ package org.example.analysis
 
 import org.apache.spark.rdd.RDD
 import org.apache.hadoop.fs.{FileSystem, Path}
-import org.example.domain.Session
-import org.example.infrastructure.FileMerger
+import org.apache.hadoop.io.IOUtils
+import org.example.model.Session
 
 object Task2 {
 
@@ -28,10 +28,31 @@ object Task2 {
       .map { case ((date, docId), cnt) => s"$date\t$docId\t$cnt" }
       .saveAsTextFile(opensPath.toString)
 
-
-    FileMerger.mergeFiles(fs, opensPath, finalOpens)
+    mergeFiles(fs, opensPath, finalOpens)
 
     println(s"(Task2) Each document from QS for each day -> $finalOpens")
+  }
+
+  // Вспомогательная функция для объединения файлов
+  private def mergeFiles(fs: FileSystem, srcDir: Path, dstFile: Path): Unit = {
+    if (!fs.exists(srcDir)) return
+
+    val files = fs.listStatus(srcDir).filter(_.isFile).map(_.getPath)
+    if (files.isEmpty) return
+
+    if (fs.exists(dstFile)) fs.delete(dstFile, false)
+
+    val out = fs.create(dstFile)
+    try {
+      files.foreach { file =>
+        val in = fs.open(file)
+        try {
+          IOUtils.copyBytes(in, out, fs.getConf, false)
+        } finally in.close()
+      }
+    } finally out.close()
+
+    fs.delete(srcDir, true)
   }
 
 }

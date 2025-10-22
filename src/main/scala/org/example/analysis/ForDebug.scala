@@ -1,7 +1,7 @@
 package org.example.analysis
 
 import org.apache.spark.rdd.RDD
-import org.example.domain.Session
+import org.example.model.Session
 
 object ForDebug {
   def run(sessions: RDD[Session]): Unit = {

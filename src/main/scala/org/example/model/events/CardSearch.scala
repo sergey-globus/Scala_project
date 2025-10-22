@@ -1,6 +1,7 @@
-package org.example.domain.events
+package org.example.model.events
 
-import org.example.domain.{EventObject, ParseContext, SearchEvent}
+import org.example.checker.Validator.{extractDatetime, isValidDocId}
+import org.example.model.{EventObject, ParseContext, SearchEvent}
 
 import java.time.LocalDateTime
 import scala.collection.mutable
@@ -30,7 +31,7 @@ object CardSearch extends EventObject[CardSearch] {
     var toks = ctx.curLine.split("\\s+")
     val datetime: LocalDateTime = toks.length match {
       case 2 =>
-        ctx.extractDatetime(toks(1))
+        extractDatetime(toks(1))
     }
 
     val params = mutable.ListBuffer.empty[(Int, String)]
@@ -51,7 +52,7 @@ object CardSearch extends EventObject[CardSearch] {
         afterEnd = true
       }
 
-      else ctx.logUnknown(ctx.fileName, s"Unknown line inside CARD_SEARCH: ${ctx.curLine}")
+      else ctx.logAcc.add(ctx.fileName, s"Unknown line inside CARD_SEARCH: ${ctx.curLine}")
     }
 
     // --- id Seq[Docs] ---
@@ -59,8 +60,8 @@ object CardSearch extends EventObject[CardSearch] {
     toks = ctx.curLine.split("\\s+")
     val id = toks.head
     val docs = toks.tail
-    docs.foreach(doc => if (!ctx.isValidDocId(doc))
-      ctx.logUnknown(ctx.fileName, s"[WARNING] Invalid DocId: $doc"))
+    docs.foreach(doc => if (!isValidDocId(doc))
+      ctx.logAcc.add(ctx.fileName, s"[WARNING] Invalid DocId: $doc"))
 
 
     val cs = CardSearch(id, datetime, params, docs)

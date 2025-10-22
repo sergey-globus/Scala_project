@@ -1,4 +1,4 @@
-package org.example.app
+package org.example.main
 
 import org.apache.spark.sql.SparkSession
 import org.example.parser.RawDataProcessor

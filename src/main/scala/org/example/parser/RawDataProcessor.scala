@@ -8,8 +8,8 @@ import java.nio.file.{Files, Paths}
 import java.nio.charset.StandardCharsets
 import scala.collection.JavaConverters.seqAsJavaListConverter
 import java.nio.file.StandardOpenOption
-import org.example.domain.Session
-import org.example.infrastructure.{Logger, Parser}
+import org.example.model.{Session, ParseContext}
+import org.example.checker.Logger
 
 object RawDataProcessor {
 
@@ -28,7 +28,14 @@ object RawDataProcessor {
       partitionIter.map { case (filePath, content) =>
         val lines = content.split("\n").toIterator
         val fileName = Paths.get(filePath).getFileName.toString
-        Parser.parseSession(fileName, lines, logAcc)
+        try {
+          Session.parse(ParseContext(fileName, lines, logAcc))
+        } catch {
+          // при исключении продолжаем вычисления без "ошибочной" сессии
+          case ex: Throwable =>
+            logAcc.addException(fileName, ex, "Parsing session failed")
+            Session.empty(fileName)
+        }
       }
     }.persist(StorageLevel.MEMORY_AND_DISK)
 

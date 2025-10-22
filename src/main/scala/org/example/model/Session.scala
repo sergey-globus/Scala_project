@@ -1,12 +1,13 @@
-package org.example.domain
+package org.example.model
 
-import org.example.domain.events.{CardSearch, DocOpen, QuickSearch}
+import org.example.checker.Validator.{extractDatetime, isValidDocId}
+import org.example.model.events.{CardSearch, DocOpen, QuickSearch}
 
 import java.time.LocalDateTime
 import scala.collection.mutable
+import org.reflections.Reflections
 
-import scala.util.Try
-
+import scala.jdk.CollectionConverters._
 
 case class Session(
                     id: String,
@@ -22,8 +23,14 @@ object Session {
   private val prefix = "SESSION_START"
   private val postfix = "SESSION_END"
 
-    private val allEventObjects: Seq[EventObject[_ <: Event]] =
-    Seq(CardSearch, QuickSearch, DocOpen)
+  private lazy val allEventObjects: Seq[EventObject[_ <: Event]] = {
+    val reflections = new Reflections("org.example.model.events")
+
+    reflections.getSubTypesOf(classOf[EventObject[_ <: Event]])
+      .asScala
+      .map(cls => cls.getField("MODULE$").get(null).asInstanceOf[EventObject[_ <: Event]])
+      .toSeq
+  }
 
   def empty(fileName: String): Session = Session(
     fileName,
@@ -34,21 +41,11 @@ object Session {
     None
   )
 
-  def parse(
-             fileName: String,
-             lines: Iterator[String],
-             isValidDocId: String => Boolean,
-             extractDatetime: String => LocalDateTime,
-             logUnknown: ((String, String)) => Unit,
-             addException: (String, Throwable, String) => Unit
-           ): Session = {
+  def parse(ctx: ParseContext): Session = {
 
-    val ctx = ParseContext(fileName, lines, isValidDocId, extractDatetime, logUnknown)
-
-    // --- Обрабатываем события до SESSION_END ---
     var endFound = false
-    while (lines.hasNext && !endFound) {
-      ctx.curLine = lines.next()
+    while (ctx.lines.hasNext && !endFound) {
+      ctx.curLine = ctx.lines.next()
 
       // SESSION_START Datetime
       if (ctx.curLine.startsWith(prefix)) {
@@ -71,16 +68,16 @@ object Session {
               event.parse(ctx)
             } catch {
               case ex: Throwable =>
-                addException(fileName, ex, s"Parsing event failed on: ${ctx.curLine}")
+                ctx.logAcc.addException(ctx.fileName, ex, s"Parsing event failed on: ${ctx.curLine}")
             }
-          case None => logUnknown(fileName, s"Unknown event: ${ctx.curLine}")
+          case None => ctx.logAcc.add(ctx.fileName, s"Unknown event: ${ctx.curLine}")
         }
       }
 
     }
 
-    if (endFound && lines.hasNext)
-      logUnknown(fileName, s"[WARNING] Lines after SESSION_END")
+    if (endFound && ctx.lines.hasNext)
+      ctx.logAcc.add(ctx.fileName, s"[WARNING] Lines after SESSION_END")
 
     ctx.buildSession()
   }

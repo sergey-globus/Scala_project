@@ -1,4 +1,4 @@
-package org.example.domain
+package org.example.model
 
 trait Event {
   def addToSession(ctx: ParseContext): Unit

@@ -1,4 +1,4 @@
-package org.example.domain
+package org.example.model
 
 import java.time.LocalDateTime
 import scala.collection.mutable

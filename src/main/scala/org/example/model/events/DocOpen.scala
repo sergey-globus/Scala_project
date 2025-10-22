@@ -1,6 +1,7 @@
-package org.example.domain.events
+package org.example.model.events
 
-import org.example.domain.{Event, EventObject, ParseContext}
+import org.example.checker.Validator.{extractDatetime, isValidDocId}
+import org.example.model.{Event, EventObject, ParseContext}
 
 import java.time.LocalDateTime
 
@@ -27,18 +28,18 @@ object DocOpen extends EventObject[DocOpen] {
     val toks = ctx.curLine.split("\\s+")
     val (dt, searchId, docId) = toks.length match {
       case 4 =>      // формат с датой
-        val dtCandidate = ctx.extractDatetime(toks(1))
+        val dtCandidate = extractDatetime(toks(1))
         val searchIdCandidate = toks(2)
         val docCandidate = toks(3)
-        if (!ctx.isValidDocId(docCandidate))
-          ctx.logUnknown(ctx.fileName, s"[WARNING] Invalid DocId: $docCandidate")
+        if (!isValidDocId(docCandidate))
+          ctx.logAcc.add(ctx.fileName, s"[WARNING] Invalid DocId: $docCandidate")
         (dtCandidate, searchIdCandidate, docCandidate)
       case 3 =>     // формат без даты
         val searchIdCandidate = toks(1)
         val dtCandidate = ctx.datetimeFromSearch(searchIdCandidate)
         val docCandidate = toks(2)
-        if (!ctx.isValidDocId(docCandidate))
-          ctx.logUnknown(ctx.fileName, s"[WARNING] Invalid DocId: $docCandidate")
+        if (!isValidDocId(docCandidate))
+          ctx.logAcc.add(ctx.fileName, s"[WARNING] Invalid DocId: $docCandidate")
         (dtCandidate, searchIdCandidate, docCandidate)
     }
 
