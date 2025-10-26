@@ -1,21 +1,19 @@
-IllegalArgumentException in Some(scala.Predef$.require(Predef.scala:281)) -> 1
-MatchError in Some(org.example.model.events.DocOpen$.parse(DocOpen.scala:29)) -> 1
+Not found SESSION_START -> 1
+Bad datetime format -> 1
 Unknown event -> 1
+MatchError in org.example.parser.model.events.DocOpen$.parse(DocOpen.scala:31) -> 1
 ----------
-123 | Type: IllegalArgumentException
-  Parsing event failed on: DOC_OPEN 01.06.202x_18:59:29 10156928 ACC_45614
-  requirement failed: Not found DocOpen.datetime
-  Stack trace:
-    scala.Predef$.require(Predef.scala:281)
-    at org.example.model.events.DocOpen.<init>(DocOpen.scala:13)
-    at org.example.model.events.DocOpen$.parse(DocOpen.scala:46)
+123 | Not found SESSION_START: START 01.06.2020_18:57:37
+
+123 | Bad datetime format: 01.06.202x_18:59:29
+
+123 | Unknown event: START 01.06.2020_18:57:37
 
 123 | Type: MatchError
   Parsing event failed on: DOC_OPEN 01.06.2020_18:59:30 10156928 LAW_367720 zzzzzzzz
   5 (of class java.lang.Integer)
   Stack trace:
-    org.example.model.events.DocOpen$.parse(DocOpen.scala:29)
-    at org.example.model.events.DocOpen$.parse(DocOpen.scala:21)
-    at org.example.model.Session$.parse(Session.scala:68)
+    org.example.parser.model.events.DocOpen$.parse(DocOpen.scala:31)
+    at org.example.parser.model.events.DocOpen$.parse(DocOpen.scala:23)
+    at org.example.parser.model.Session$.parse(Session.scala:63)
 
-123 | Unknown event: START 01.06.2020_18:57:37

@@ -1,20 +1,17 @@
-package org.example.model.events
+package org.example.parser.model.events
 
-import org.example.checker.Validator.{extractDatetime, isValidDocId}
-import org.example.model.{EventObject, ParseContext, SearchEvent}
+import org.example.checker.Validator.extractDatetime
+import org.example.parser.model.{EventObject, ParseContext, SearchEvent}
 
 import java.time.LocalDateTime
 import scala.collection.mutable
 
 case class CardSearch(
                        override val id: String,
-                       override val datetime: LocalDateTime,
+                       override val datetime: Option[LocalDateTime],
                        params: Seq[(Int, String)],
                        override val foundDocs: Seq[String]
                      ) extends SearchEvent(id, datetime, foundDocs) {
-  require(id.nonEmpty, "Not found CardSearch.id")
-  require(datetime != null, "Not found CardSearch.datetime")
-  require(params.nonEmpty, "Not found CardSearch.params")
 
   override def addToSession(ctx: ParseContext): Unit =
     ctx.cardSearches += this
@@ -29,9 +26,14 @@ object CardSearch extends EventObject[CardSearch] {
 
     // CARD_SEARCH_START datetime
     var toks = ctx.curLine.split("\\s+")
-    val datetime: LocalDateTime = toks.length match {
+    var datetime = toks.length match {
       case 2 =>
         extractDatetime(toks(1))
+    }
+    //
+    if (datetime.isEmpty) {     // Если поле datetime - пустое, берем из сессии
+      ctx.logAcc.add(ctx.fileName, s"Bad datetime format: ${toks(1)}")
+      datetime = ctx.startDatetime
     }
 
     val params = mutable.ListBuffer.empty[(Int, String)]
@@ -60,14 +62,8 @@ object CardSearch extends EventObject[CardSearch] {
     toks = ctx.curLine.split("\\s+")
     val id = toks.head
     val docs = toks.tail
-    docs.foreach(doc => if (!isValidDocId(doc))
-      ctx.logAcc.add(ctx.fileName, s"[WARNING] Invalid DocId: $doc"))
 
 
-    val cs = CardSearch(id, datetime, params, docs)
-
-    cs.addToSearches(ctx)
-    cs.addToSession(ctx)
-    cs
+    CardSearch(id, datetime, params.toList, docs)
   }
 }

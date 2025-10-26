@@ -4,32 +4,32 @@ No Card Searches found.
 ==================================================
 Query Searches:
 id: 24455574
-datetime: 2020-03-21T08:20:08
+datetime: Some(2020-03-21T08:20:08)
 query: разумный срок ответа на претензию
 foundDocs: PAS_585689, OTN_9149, PAS_553807, PAS_553896, ACC_45616, PAS_596656, PAS_107776, STR_1958, PAS_430849
-openDocs: STR_1958, PAS_596656, STR_1958
+openDocs: (Some(2020-03-21T08:20:12),STR_1958), (Some(2020-03-21T08:20:43),PAS_596656), (Some(2020-03-21T08:24:05),STR_1958)
 ---
 id: 203770859
-datetime: 2020-03-21T08:20:58
+datetime: Some(2020-03-21T08:20:58)
 query: ПИСЬМО от 17 ноября 2020 г. N 18-2/И/2-17599
 foundDocs: LAW_368672
-openDocs: LAW_368672
+openDocs: (Some(2020-03-21T08:22:56),LAW_368672)
 ---
 ==================================================
 Doc Opens:
-datetime: 2020-03-21T08:20:12
+datetime: Some(2020-03-21T08:20:12)
 searchId: 24455574
 docId: STR_1958
 ---
-datetime: 2020-03-21T08:20:43
+datetime: Some(2020-03-21T08:20:43)
 searchId: 24455574
 docId: PAS_596656
 ---
-datetime: 2020-03-21T08:22:56
+datetime: Some(2020-03-21T08:22:56)
 searchId: 203770859
 docId: LAW_368672
 ---
-datetime: 2020-03-21T08:24:05
+datetime: Some(2020-03-21T08:24:05)
 searchId: 24455574
 docId: STR_1958
 ---

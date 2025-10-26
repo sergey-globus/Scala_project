@@ -1,19 +1,16 @@
-package org.example.model.events
+package org.example.parser.model.events
 
-import org.example.checker.Validator.{extractDatetime, isValidDocId}
-import org.example.model.{EventObject, ParseContext, SearchEvent}
+import org.example.checker.Validator.extractDatetime
+import org.example.parser.model.{EventObject, ParseContext, SearchEvent}
 
 import java.time.LocalDateTime
 
 case class QuickSearch(
                         override val id: String,
-                        override val datetime: LocalDateTime,
+                        override val datetime: Option[LocalDateTime],
                         query: String,
                         override val foundDocs: Seq[String]
                       ) extends SearchEvent(id, datetime, foundDocs) {
-  require(id.nonEmpty, "Not found QuickSearch.id")
-  require(datetime != null, "Not found QuickSearch.datetime")
-  require(query.nonEmpty, "Not found QuickSearch.query")
 
   override def addToSession(ctx: ParseContext): Unit =
     ctx.quickSearches += this
@@ -27,11 +24,17 @@ object QuickSearch extends EventObject[QuickSearch] {
 
     // --- QS datetime {query} ---
     var toks = ctx.curLine.split("\\s+", 3)
-    val dt = extractDatetime(toks(1))
+    var datetime = extractDatetime(toks(1))
+
+    if (datetime.isEmpty) {      // Если поле datetime - пустое, берем из сессии
+      ctx.logAcc.add(ctx.fileName, s"Bad datetime format: ${toks(1)}")
+      datetime = ctx.startDatetime
+    }
     val queryRow = toks(2)
     val query =
-      if (queryRow.startsWith("{") && queryRow.endsWith("}"))
+      if (queryRow.startsWith("{") && queryRow.endsWith("}")) {
         queryRow.drop(1).dropRight(1)
+      }
       else {
         ctx.logAcc.add(ctx.fileName, s"Bad query format: ${ctx.curLine}")
         "unknown"
@@ -42,14 +45,8 @@ object QuickSearch extends EventObject[QuickSearch] {
     toks = ctx.curLine.split("\\s+")
     val id = toks.head
     val docs = toks.tail
-    docs.foreach(doc => if (!isValidDocId(doc))
-      ctx.logAcc.add(ctx.fileName, s"[WARNING] Invalid DocId: $doc"))
 
 
-    val qs = QuickSearch(id, dt, query, docs)
-
-    qs.addToSearches(ctx)
-    qs.addToSession(ctx)
-    qs
+    QuickSearch(id, datetime, query, docs)
   }
 }

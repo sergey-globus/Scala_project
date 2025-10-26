@@ -1,5 +1,5 @@
 // src/test/scala/org/example/infrastructure/TestParser.scala
-package org.example.model
+package org.example.parser.model
 
 import org.example.checker.Logger
 import org.scalatest.funsuite.AnyFunSuite
@@ -37,7 +37,7 @@ class TestParser extends AnyFunSuite {
 
 
 
-  private def debugSessionToString(session: org.example.model.Session): String = {
+  private def debugSessionToString(session: Session): String = {
     val sb = new StringBuilder
     sb.append(s"Session ID: ${session.id}\n\n")
 
@@ -49,7 +49,7 @@ class TestParser extends AnyFunSuite {
           cs.params.map { case (num, text) => s"($num, '$text')" }.mkString(", ")
         else "None"
         val foundDocsStr = if (cs.foundDocs.nonEmpty) cs.foundDocs.mkString(", ") else "None"
-        val openDocs = cs.getOpenDocs
+        val openDocs = cs.getDocOpens
         val openDocsStr = if (openDocs.nonEmpty) openDocs.mkString(", ") else "None"
         sb.append(s"id: ${cs.id}\n")
         sb.append(s"datetime: ${cs.datetime}\n")
@@ -66,7 +66,7 @@ class TestParser extends AnyFunSuite {
       sb.append("Query Searches:\n")
       session.quickSearches.foreach { qs =>
         val foundDocsStr = if (qs.foundDocs.nonEmpty) qs.foundDocs.mkString(", ") else "None"
-        val openDocs = qs.getOpenDocs
+        val openDocs = qs.getDocOpens
         val openDocsStr = if (openDocs.nonEmpty) openDocs.mkString(", ") else "None"
         sb.append(s"id: ${qs.id}\n")
         sb.append(s"datetime: ${qs.datetime}\n")
@@ -104,31 +104,30 @@ class TestParser extends AnyFunSuite {
 
     val errors = scala.collection.mutable.ListBuffer.empty[String]
 
-    Files.list(resourcesRoot).iterator().asScala.foreach { filePath =>
-      if (Files.isRegularFile(filePath)) {
-        val lines = Files.readAllLines(filePath).asScala.iterator
-        val fname = filePath.getFileName.toString
+    Files.list(resourcesRoot).filter(Files.isRegularFile(_)) // <-- чтоб файлы без расширения не считались директориями
+      .iterator().asScala.foreach { filePath =>
+      val lines = Files.readAllLines(filePath).asScala.iterator
+      val fname = filePath.getFileName.toString
 
-        val session = Session.parse(ParseContext(fname, lines, logAcc))
+      val session = Session.parse(ParseContext(fname, lines, logAcc))
 
-        expected.get(fname) match {
-          case Some(exp) =>
-            if (session.quickSearches.size != exp.quickSearchCount)
-              errors += s"$fname: QS mismatch, expected ${exp.quickSearchCount}, actual ${session.quickSearches.size}"
-            if (session.cardSearches.size != exp.cardSearchCount)
-              errors += s"$fname: CS mismatch, expected ${exp.cardSearchCount}, actual ${session.cardSearches.size}"
-            if (session.docOpens.size != exp.docOpenCount)
-              errors += s"$fname: DocOpen mismatch, expected ${exp.docOpenCount}, actual ${session.docOpens.size}"
+      expected.get(fname) match {
+        case Some(exp) =>
+          if (session.quickSearches.size != exp.quickSearchCount)
+            errors += s"$fname: QS mismatch, expected ${exp.quickSearchCount}, actual ${session.quickSearches.size}"
+          if (session.cardSearches.size != exp.cardSearchCount)
+            errors += s"$fname: CS mismatch, expected ${exp.cardSearchCount}, actual ${session.cardSearches.size}"
+          if (session.docOpens.size != exp.docOpenCount)
+            errors += s"$fname: DocOpen mismatch, expected ${exp.docOpenCount}, actual ${session.docOpens.size}"
 
-          case None =>
-            info(s"Нет проверок для $fname — только debug сохранён")
-        }
-
-        val debugPath = resultDir.resolve(s"${filePath.getFileName.toString}.txt")
-        val debugStr = debugSessionToString(session)
-        Files.write(debugPath, debugStr.getBytes(StandardCharsets.UTF_8),
-          StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)
+        case None =>
+          info(s"Нет проверок для $fname — только debug сохранён")
       }
+
+      val debugPath = resultDir.resolve(s"${filePath.getFileName.toString}.txt")
+      val debugStr = debugSessionToString(session)
+      Files.write(debugPath, debugStr.getBytes(StandardCharsets.UTF_8),
+        StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)
     }
 
     // Выводим все ошибки и падаем, если они есть

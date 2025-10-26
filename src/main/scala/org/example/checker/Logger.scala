@@ -3,16 +3,12 @@ package org.example.checker
 import org.apache.spark.util.AccumulatorV2
 import scala.collection.mutable
 
-case class LogData(
-                    counts: Map[String, Int],
-                    unknowns: List[String]
-                  )
+case class LogEntry(count: Int, examples: Vector[(String, String)])
 
-class Logger extends AccumulatorV2[(String, String), LogData] {
+// IN: (fileName, msg), OUT: Map[errorType, LogEntry <-- (count, (fileName, msg))]
+class Logger(val maxLog: Int = 10) extends AccumulatorV2[(String, String), Map[String, LogEntry]] {
 
-  private val counts = mutable.Map.empty[String, Int]
-  private val examples = mutable.Map.empty[String, mutable.ListBuffer[String]]
-  private val maxLog = 10
+  private val data = mutable.Map.empty[String, LogEntry]
 
   private def errorTypeFrom(msg: String): String = {
     val idx = msg.indexOf(':')
@@ -21,77 +17,58 @@ class Logger extends AccumulatorV2[(String, String), LogData] {
     else "UnknownType"
   }
 
-  override def isZero: Boolean = counts.isEmpty && examples.isEmpty
+  override def isZero: Boolean = data.isEmpty
 
-  override def copy(): AccumulatorV2[(String, String), LogData] = {
-    val newAcc = new Logger
-    counts.foreach { case (k, v) => newAcc.counts(k) = v }
-    examples.foreach { case (k, v) => newAcc.examples(k) = v.clone() }
+  override def copy(): AccumulatorV2[(String, String), Map[String, LogEntry]] = {
+    val newAcc = new Logger(maxLog)
+    data.foreach { case (k, v) =>
+      newAcc.data(k) = v.copy()
+    }
     newAcc
   }
 
-  override def reset(): Unit = {
-    counts.clear()
-    examples.clear()
-  }
+  override def reset(): Unit = data.clear()
 
   override def add(v: (String, String)): Unit = synchronized {
     val (fileName, msg) = v
     val et = errorTypeFrom(msg)
-    counts(et) = counts.getOrElse(et, 0) + 1
-    val buf = examples.getOrElseUpdate(et, mutable.ListBuffer.empty[String])
-    if (buf.size < maxLog)
-      buf += s"$fileName | $msg"
+    val old = data.getOrElse(et, LogEntry(0, Vector.empty))
+    val newExamples =
+      if (old.examples.size < maxLog) old.examples :+ (fileName -> msg)
+      else old.examples
+    data(et) = old.copy(count = old.count + 1, examples = newExamples)
   }
 
   def addException(fileName: String, ex: Throwable, context: String = ""): Unit = synchronized {
-    val et = ex.getClass.getSimpleName + " in " + ex.getStackTrace.headOption.map(_.toString)
-    counts(et) = counts.getOrElse(et, 0) + 1
+    val et = ex.getClass.getSimpleName +
+      " in " +
+      ex.getStackTrace.headOption.map(_.toString).getOrElse("")
 
-    val buf = examples.getOrElseUpdate(et, mutable.ListBuffer.empty[String])
-    if (buf.size < maxLog) {
-      val stack = ex.getStackTrace.take(3).map(_.toString).mkString("\n    at ")
-      val msg =
-        s"""$fileName | Type: ${ex.getClass.getSimpleName}
-                      |  $context
-                      |  ${ex.getMessage}
-                      |  Stack trace:
-                      |    $stack
-                      |""".stripMargin
-      buf += msg
-    }
+    val old = data.getOrElse(et, LogEntry(0, Vector.empty))
+    val stack = ex.getStackTrace.take(3).map(_.toString).mkString("\n    at ")
+    val msg =
+      s"""Type: ${ex.getClass.getSimpleName}
+          |  $context
+          |  ${ex.getMessage}
+          |  Stack trace:
+          |    $stack""".stripMargin
+    val newExamples =
+      if (old.examples.size < maxLog) old.examples :+ (fileName -> msg)
+      else old.examples
+    data(et) = old.copy(count = old.count + 1, examples = newExamples)
   }
 
-  override def merge(other: AccumulatorV2[(String, String), LogData]): Unit = synchronized {
+  override def merge(other: AccumulatorV2[(String, String), Map[String, LogEntry]]): Unit = synchronized {
     other match {
       case o: Logger =>
-        o.counts.foreach { case (k, v) =>
-          counts(k) = counts.getOrElse(k, 0) + v
+        o.data.foreach { case (et, logEntry) =>
+          val old = data.getOrElse(et, LogEntry(0, Vector.empty))
+          val remaining = maxLog - old.examples.size
+          val mergedExamples = old.examples ++ logEntry.examples.take(remaining)
+          data(et) = old.copy(count = old.count + logEntry.count, examples = mergedExamples)
         }
-
-        // Мержим с ограничением maxLog на каждый тип
-        o.examples.foreach { case (et, oBuf) =>
-          val buf = examples.getOrElseUpdate(et, mutable.ListBuffer.empty[String])
-          val remaining = maxLog - buf.size
-          if (remaining > 0)
-            buf ++= oBuf.take(remaining)
-        }
-
-      case _ =>
-        throw new UnsupportedOperationException(
-          s"Cannot merge ${this.getClass} with ${other.getClass}")
     }
   }
 
-  override def value: LogData = {
-    val combinedUnknowns =
-      examples.toSeq.flatMap { case (_, msgs) => msgs }.toList
-    LogData(counts.toMap, combinedUnknowns)
-  }
-
-  def getStats: String =
-    counts.map { case (t, c) => s"$t: $c" }.mkString("\n")
-
-  def getUnknowns: List[String] =
-    examples.toSeq.flatMap { case (_, msgs) => msgs }.toList
+  override def value: Map[String, LogEntry] = data.toMap
 }

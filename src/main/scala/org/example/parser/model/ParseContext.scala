@@ -1,7 +1,7 @@
-package org.example.model
+package org.example.parser.model
 
 import org.example.checker.Logger
-import org.example.model.events.{CardSearch, DocOpen, QuickSearch}
+import org.example.parser.model.events.{CardSearch, DocOpen, QuickSearch}
 
 import java.time.LocalDateTime
 import scala.collection.mutable
@@ -18,31 +18,29 @@ case class ParseContext(fileName: String, lines: Iterator[String], logAcc: Logge
 
   val searches: mutable.Map[String, SearchEvent] = mutable.Map.empty
 
-  def attachToSearch(docId: String, searchId: String): Unit = {
+  def +=(event: Event): Unit = event.addToContext(this)
+
+  def attachDocOpenToSearch(dt: Option[LocalDateTime], docId: String, searchId: String): Unit = {
     searches.get(searchId) match {
-      case Some(searchEvent) => searchEvent.addOpenDoc(docId)
+      case Some(searchEvent) =>
+        // Если поле datetime в DOC_OPEN - пустое, берем из searchEvent
+        val datetime = if (dt.isEmpty) searchEvent.datetime else dt
+        searchEvent.addDocOpen(datetime, docId)
 //        if (searchEvent.foundDocs.contains(docId))
 //          searchEvent.addOpenDoc(docId)
 //        else
 //          logUnknown(fileName, s"DOC_OPEN not in foundDocs: $searchId -> $docId")
-      case None => logAcc.add(fileName, s"[WARNING] Orphan DOC_OPEN: $searchId -> $docId")
+      case None => logAcc.add(fileName, s"[WARNING] Orphan DOC_OPEN: $curLine")
     }
   }
 
-  def datetimeFromSearch(searchId: String): LocalDateTime = {
-    searches.get(searchId) match {
-      case Some(searchEvent) => searchEvent.datetime
-      case None => null
-    }
-  }
 
-  // --- Построение итоговой Session ---
   def buildSession(): Session =
     Session(
       id = fileName,
-      cardSearches = cardSearches,
-      quickSearches = quickSearches,
-      docOpens = docOpens,
+      cardSearches = cardSearches.toList,
+      quickSearches = quickSearches.toList,
+      docOpens = docOpens.toList,
       startDatetime = startDatetime,
       endDatetime = endDatetime
     )

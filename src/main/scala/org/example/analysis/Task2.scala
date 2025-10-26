@@ -1,58 +1,36 @@
 package org.example.analysis
 
-import org.apache.spark.rdd.RDD
-import org.apache.hadoop.fs.{FileSystem, Path}
-import org.apache.hadoop.io.IOUtils
-import org.example.model.Session
+import org.example.services.SparkUtils.mergeFiles
 
+import org.apache.spark.rdd.RDD
+import org.example.parser.model.Session
+
+/**
+ * Количество открытий каждого документа, найденного через быстрый поиск за каждый день.
+ * Результат сохраняется в CSV файл с форматом:
+ *   date,docId,count
+ */
 object Task2 {
 
-  private val outputDir = "result"
+  private val opensFile = "result/opens"
 
   def run(sessions: RDD[Session], sc: org.apache.spark.SparkContext): Unit = {
-    val fs = FileSystem.get(sc.hadoopConfiguration)
-    val opensPath = new Path(outputDir + "/opens")
-    val finalOpens = new Path(outputDir + "/opens.txt")
 
-    if (fs.exists(opensPath)) fs.delete(opensPath, true)
-    if (fs.exists(finalOpens)) fs.delete(finalOpens, false)
-
-    val quickSearchDocCounts = sessions.flatMap { session =>
+    sessions.flatMap { session =>
       session.quickSearches.flatMap { qs =>
-        val date = qs.datetime.toLocalDate.toString
-        qs.openDocs.map(docId => ((date, docId), 1))
+        qs.docOpens.map { case (datetime, docId) =>
+          val date = datetime.map(_.toLocalDate.toString).getOrElse("None")
+          ((date, docId), 1)
+        }.toSet   // убираем дубликаты в рамках одного qs
       }
-    }.reduceByKey(_ + _)
+    }
+    .reduceByKey(_ + _)
+    .map { case ((date, docId), cnt) => s"$date,$docId,$cnt" }
+    .saveAsTextFile(opensFile)
 
-    quickSearchDocCounts
-      .map { case ((date, docId), cnt) => s"$date\t$docId\t$cnt" }
-      .saveAsTextFile(opensPath.toString)
+    mergeFiles(sc, opensFile)
 
-    mergeFiles(fs, opensPath, finalOpens)
-
-    println(s"(Task2) Each document from QS for each day -> $finalOpens")
-  }
-
-  // Вспомогательная функция для объединения файлов
-  private def mergeFiles(fs: FileSystem, srcDir: Path, dstFile: Path): Unit = {
-    if (!fs.exists(srcDir)) return
-
-    val files = fs.listStatus(srcDir).filter(_.isFile).map(_.getPath)
-    if (files.isEmpty) return
-
-    if (fs.exists(dstFile)) fs.delete(dstFile, false)
-
-    val out = fs.create(dstFile)
-    try {
-      files.foreach { file =>
-        val in = fs.open(file)
-        try {
-          IOUtils.copyBytes(in, out, fs.getConf, false)
-        } finally in.close()
-      }
-    } finally out.close()
-
-    fs.delete(srcDir, true)
+    println(s"(Task2) Each document from QS for each day -> $opensFile.csv")
   }
 
 }

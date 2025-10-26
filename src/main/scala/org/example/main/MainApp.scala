@@ -13,10 +13,8 @@ object MainApp {
       .getOrCreate()
     val sc = spark.sparkContext
 
-    // Парсим сессии
     val sessions = RawDataProcessor.process(sc)
 
-    // Выполняем задачи
     ForDebug.run(sessions)
     Task1.run(sessions)
     Task2.run(sessions, sc)
