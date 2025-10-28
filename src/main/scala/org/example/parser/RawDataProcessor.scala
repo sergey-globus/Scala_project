@@ -8,7 +8,6 @@ import java.nio.file.{Files, Paths}
 import java.nio.charset.StandardCharsets
 import scala.collection.JavaConverters.seqAsJavaListConverter
 import java.nio.file.StandardOpenOption
-import org.example.checker.Logger
 import org.example.parser.model.{ParseContext, Session}
 
 object RawDataProcessor {
@@ -25,23 +24,18 @@ object RawDataProcessor {
       .map { case (filePath, content) =>
         val lines = content.split("\n").toIterator
         val fileName = Paths.get(filePath).getFileName.toString
-        try {
-          Session.parse(ParseContext(fileName, lines, logAcc))
-        } catch {
-          case ex: Throwable =>
-            logAcc.addException(fileName, ex, "Parsing session failed")
-            Session.empty(fileName)
-        }
+        Session.parse(ParseContext(fileName, lines, logAcc))
       }.persist(StorageLevel.MEMORY_AND_DISK)
   }
 
   def saveLogs(): Unit = {
-    val logs = logAcc.value
+    val errors = logAcc.value
 
-    val allLines = logs.map { case (errType, log) =>
-      s"$errType -> ${log.count}"}.toSeq ++
+    val allLines = errors.map { case (errorType, error) =>
+      s"$errorType -> ${error.count}"}.toSeq ++
       Seq("----------") ++
-      logs.flatMap { case (_, log) => log.examples.map { case (fileName, msg) =>
+      errors.flatMap { case (errorType, error) => error.examples.map { case (fileName, context) =>
+        val msg = if (context.isEmpty) s"$errorType" else s"$errorType at " + s"$context"
         s"$fileName | $msg" } ++ Seq("")}.toSeq
 
     val logsPath = Paths.get(outputDir, "logs.txt")

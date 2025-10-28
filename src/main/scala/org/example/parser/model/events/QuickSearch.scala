@@ -1,6 +1,6 @@
 package org.example.parser.model.events
 
-import org.example.checker.Validator.extractDatetime
+import org.example.parser.model.DatetimeParser.parseDatetime
 import org.example.parser.model.{EventObject, ParseContext, SearchEvent}
 
 import java.time.LocalDateTime
@@ -24,19 +24,18 @@ object QuickSearch extends EventObject[QuickSearch] {
 
     // --- QS datetime {query} ---
     var toks = ctx.curLine.split("\\s+", 3)
-    var datetime = extractDatetime(toks(1))
+    var datetime = parseDatetime(toks(1))
 
     if (datetime.isEmpty) {      // Если поле datetime - пустое, берем из сессии
-      ctx.logAcc.add(ctx.fileName, s"Bad datetime format: ${toks(1)}")
+      ctx.logAcc.add(s"Bad datetime format in QS", ctx.fileName, toks(1))
       datetime = ctx.startDatetime
     }
-    val queryRow = toks(2)
+    val rawQuery = toks(2)
     val query =
-      if (queryRow.startsWith("{") && queryRow.endsWith("}")) {
-        queryRow.drop(1).dropRight(1)
-      }
-      else {
-        ctx.logAcc.add(ctx.fileName, s"Bad query format: ${ctx.curLine}")
+      if (rawQuery.startsWith("{") && rawQuery.endsWith("}")) {
+        rawQuery.drop(1).dropRight(1)
+      } else {
+        ctx.logAcc.add(s"Bad query format in QS", ctx.fileName, ctx.curLine)
         "unknown"
       }
 
@@ -45,7 +44,6 @@ object QuickSearch extends EventObject[QuickSearch] {
     toks = ctx.curLine.split("\\s+")
     val id = toks.head
     val docs = toks.tail
-
 
     QuickSearch(id, datetime, query, docs)
   }

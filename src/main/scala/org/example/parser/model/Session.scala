@@ -1,6 +1,6 @@
 package org.example.parser.model
 
-import org.example.checker.Validator.extractDatetime
+import org.example.parser.model.DatetimeParser.parseDatetime
 import org.example.parser.model.events.{CardSearch, DocOpen, QuickSearch}
 import org.reflections.Reflections
 
@@ -41,50 +41,59 @@ object Session {
   )
 
   def parse(ctx: ParseContext): Session = {
-
-    // SESSION_START Datetime
-    ctx.curLine = ctx.lines.next()
-    if (ctx.curLine.startsWith(prefix)) {
-      val toks = ctx.curLine.split("\\s+")
-      ctx.startDatetime = extractDatetime(toks(1))
-      if (ctx.startDatetime.isEmpty)
-        ctx.logAcc.add(ctx.fileName, s"Bad datetime format: ${toks(1)}")
+    try {
+      // SESSION_START Datetime
       ctx.curLine = ctx.lines.next()
-    }
-    else {
-      ctx.logAcc.add(ctx.fileName, s"Not found SESSION_START: ${ctx.curLine}")
-    }
-
-    do {
-      // --- Начало события ---
-      allEventObjects.find(_.matches(ctx.curLine)) match {
-        case Some(event) =>
-          try {
-            ctx += event.parse(ctx)
-          } catch {
-            case ex: Throwable =>
-              ctx.logAcc.addException(ctx.fileName, ex, s"Parsing event failed on: ${ctx.curLine}")
-          }
-        case None => ctx.logAcc.add(ctx.fileName, s"Unknown event: ${ctx.curLine}")
+      if (ctx.curLine.startsWith(prefix)) {
+        val toks = ctx.curLine.split("\\s+")
+        ctx.startDatetime = parseDatetime(toks(1))
+        if (ctx.startDatetime.isEmpty) {
+          ctx.logAcc.add(s"Bad datetime format in SESSION_START", ctx.fileName, toks(1))
+        }
+        ctx.curLine = ctx.lines.next()
+      } else {
+        ctx.logAcc.add(s"Not found SESSION_START", ctx.fileName, ctx.curLine)
       }
 
-      ctx.curLine = if (ctx.lines.hasNext) ctx.lines.next() else null
+      do {
+        // --- Начало события ---
+        allEventObjects.find(_.matches(ctx.curLine)) match {
+          case Some(event) =>
+            try {
+              ctx += event.parse(ctx)
+            } catch {
+              case ex: Throwable =>
+                val eventPrefix = ctx.curLine.split("\\s+").headOption.getOrElse("")
+                ctx.logAcc.addException(ex, ctx.fileName, s"Parsing event $eventPrefix failed")
+            }
+          case None =>
+            val eventPrefix = ctx.curLine.split("\\s+").headOption.getOrElse("")
+            ctx.logAcc.add(s"Unknown event - $eventPrefix", ctx.fileName, "")
+        }
 
-    } while (ctx.curLine != null && !ctx.curLine.startsWith(postfix))
+        ctx.curLine = if (ctx.lines.hasNext) ctx.lines.next() else null
 
-    // SESSION_END Datetime
-    if (ctx.curLine != null) {
-      val toks = ctx.curLine.split("\\s+")
-      ctx.endDatetime = extractDatetime(toks(1))
-      if (ctx.endDatetime.isEmpty)
-        ctx.logAcc.add(ctx.fileName, s"Bad datetime format: ${toks(1)}")
-      if (ctx.lines.hasNext)
-        ctx.logAcc.add(ctx.fileName, s"[WARNING] Lines after SESSION_END")
+      } while (ctx.curLine != null && !ctx.curLine.startsWith(postfix))
+
+      // SESSION_END Datetime
+      if (ctx.curLine != null) {
+        val toks = ctx.curLine.split("\\s+")
+        ctx.endDatetime = parseDatetime(toks(1))
+        if (ctx.endDatetime.isEmpty) {
+          ctx.logAcc.add(s"Bad datetime format in SESSION_END", ctx.fileName, toks(1))
+        }
+        if (ctx.lines.hasNext) {
+          ctx.logAcc.add(s"[WARNING] Lines after SESSION_END", ctx.fileName, "")
+        }
+      } else {
+        ctx.logAcc.add(s"Not found SESSION_END", ctx.fileName, "")
+      }
+
+      ctx.buildSession()
+    } catch {
+      case ex: Throwable =>
+        ctx.logAcc.addException(ex, ctx.fileName, "Parsing session failed")
+        Session.empty(ctx.fileName)
     }
-    else {
-      ctx.logAcc.add(ctx.fileName, s"Not found SESSION_END: ${ctx.curLine}")
-    }
-
-    ctx.buildSession()
   }
 }

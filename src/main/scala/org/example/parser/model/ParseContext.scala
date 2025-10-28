@@ -1,6 +1,6 @@
 package org.example.parser.model
 
-import org.example.checker.Logger
+import org.example.parser.Logger
 import org.example.parser.model.events.{CardSearch, DocOpen, QuickSearch}
 
 import java.time.LocalDateTime
@@ -30,7 +30,7 @@ case class ParseContext(fileName: String, lines: Iterator[String], logAcc: Logge
 //          searchEvent.addOpenDoc(docId)
 //        else
 //          logUnknown(fileName, s"DOC_OPEN not in foundDocs: $searchId -> $docId")
-      case None => logAcc.add(fileName, s"[WARNING] Orphan DOC_OPEN: $curLine")
+      case None => logAcc.add(s"[WARNING] Orphan DOC_OPEN", fileName, curLine)
     }
   }
 

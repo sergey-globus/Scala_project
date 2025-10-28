@@ -1,6 +1,6 @@
 package org.example.parser.model.events
 
-import org.example.checker.Validator.extractDatetime
+import org.example.parser.model.DatetimeParser.parseDatetime
 import org.example.parser.model.{Event, EventObject, ParseContext}
 
 import java.time.LocalDateTime
@@ -30,9 +30,10 @@ object DocOpen extends EventObject[DocOpen] {
     val toks = ctx.curLine.split("\\s+")
     val (datetime, searchId, docId) = toks.length match {
       case 4 =>      // формат с датой
-        val dt = extractDatetime(toks(1))
-        if (dt.isEmpty)
-          ctx.logAcc.add(ctx.fileName, s"Bad datetime format: ${toks(1)}")
+        val dt = parseDatetime(toks(1))
+        if (dt.isEmpty) {
+          ctx.logAcc.add(s"Bad datetime format in DOC_OPEN", ctx.fileName, toks(1))
+        }
         (dt, toks(2), toks(3))
       case 3 =>     // формат без даты
         (None, toks(1), toks(2))

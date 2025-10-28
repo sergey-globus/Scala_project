@@ -1,19 +1,16 @@
 Not found SESSION_START -> 1
-Bad datetime format -> 1
-Unknown event -> 1
+Bad datetime format in DOC_OPEN -> 1
+Unknown event - START -> 1
 MatchError in org.example.parser.model.events.DocOpen$.parse(DocOpen.scala:31) -> 1
 ----------
-123 | Not found SESSION_START: START 01.06.2020_18:57:37
+123 | Not found SESSION_START at START 01.06.2020_18:57:37
 
-123 | Bad datetime format: 01.06.202x_18:59:29
+123 | Bad datetime format in DOC_OPEN at 01.06.202x_18:59:29
 
-123 | Unknown event: START 01.06.2020_18:57:37
+123 | Unknown event - START
 
-123 | Type: MatchError
-  Parsing event failed on: DOC_OPEN 01.06.2020_18:59:30 10156928 LAW_367720 zzzzzzzz
-  5 (of class java.lang.Integer)
-  Stack trace:
-    org.example.parser.model.events.DocOpen$.parse(DocOpen.scala:31)
-    at org.example.parser.model.events.DocOpen$.parse(DocOpen.scala:23)
-    at org.example.parser.model.Session$.parse(Session.scala:63)
+123 | MatchError in org.example.parser.model.events.DocOpen$.parse(DocOpen.scala:31) at org.example.parser.model.events.DocOpen$.parse(DocOpen.scala:23) at
+  org.example.parser.model.Session$.parse(Session.scala:63)
+  Message: 5 (of class java.lang.Integer)
+  Parsing event DOC_OPEN failed
 

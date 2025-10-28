@@ -1,7 +1,7 @@
 // src/test/scala/org/example/infrastructure/TestParser.scala
 package org.example.parser.model
 
-import org.example.checker.Logger
+import org.example.parser.Logger
 import org.scalatest.funsuite.AnyFunSuite
 
 import java.nio.charset.StandardCharsets
