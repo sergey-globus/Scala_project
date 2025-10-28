@@ -1,7 +1,7 @@
 package org.example.parser.model.events
 
 import org.example.parser.model.DatetimeParser.parseDatetime
-import org.example.parser.model.{EventObject, ParseContext, SearchEvent}
+import org.example.parser.model.{Event, ParseContext, SearchEvent, SearchEventObject}
 
 import java.time.LocalDateTime
 
@@ -10,13 +10,13 @@ case class QuickSearch(
                         override val datetime: Option[LocalDateTime],
                         query: String,
                         override val foundDocs: Seq[String]
-                      ) extends SearchEvent(id, datetime, foundDocs) {
+                      ) extends SearchEvent(id, datetime, foundDocs)
 
-  override def addToSession(ctx: ParseContext): Unit =
-    ctx.quickSearches += this
-}
+object QuickSearch extends SearchEventObject[QuickSearch] {
 
-object QuickSearch extends EventObject[QuickSearch] {
+  override def addToSession(ctx: ParseContext, event: QuickSearch): Unit = {
+    ctx.quickSearches += event
+  }
 
   override protected val prefix = "QS"
 
@@ -45,6 +45,8 @@ object QuickSearch extends EventObject[QuickSearch] {
     val id = toks.head
     val docs = toks.tail
 
-    QuickSearch(id, datetime, query, docs)
+    val event = QuickSearch(id, datetime, query, docs)
+    addToContext(ctx, event)
+    event
   }
 }

@@ -9,8 +9,9 @@ MatchError in org.example.parser.model.events.DocOpen$.parse(DocOpen.scala:31) -
 
 123 | Unknown event - START
 
-123 | MatchError in org.example.parser.model.events.DocOpen$.parse(DocOpen.scala:31) at org.example.parser.model.events.DocOpen$.parse(DocOpen.scala:23) at
-  org.example.parser.model.Session$.parse(Session.scala:63)
+123 | MatchError in org.example.parser.model.events.DocOpen$.parse(DocOpen.scala:31) at '
+  org.example.parser.model.events.DocOpen$.parse(DocOpen.scala:14) at
+  org.example.parser.model.Session$.parse(Session.scala:67)
   Message: 5 (of class java.lang.Integer)
   Parsing event DOC_OPEN failed
 

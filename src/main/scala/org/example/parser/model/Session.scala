@@ -7,6 +7,7 @@ import org.reflections.Reflections
 import java.time.LocalDateTime
 import scala.collection.mutable
 import scala.jdk.CollectionConverters._
+import scala.util.Try
 
 case class Session(
                     id: String,
@@ -27,7 +28,10 @@ object Session {
 
     reflections.getSubTypesOf(classOf[EventObject[_ <: Event]])
       .asScala
-      .map(cls => cls.getField("MODULE$").get(null).asInstanceOf[EventObject[_ <: Event]])
+      .map { cls =>
+        Try(cls.getField("MODULE$").get(null).asInstanceOf[EventObject[_ <: Event]]).toOption
+      }
+      .collect { case Some(obj) => obj }
       .toSeq
   }
 
@@ -60,7 +64,7 @@ object Session {
         allEventObjects.find(_.matches(ctx.curLine)) match {
           case Some(event) =>
             try {
-              ctx += event.parse(ctx)
+              event.parse(ctx)
             } catch {
               case ex: Throwable =>
                 val eventPrefix = ctx.curLine.split("\\s+").headOption.getOrElse("")

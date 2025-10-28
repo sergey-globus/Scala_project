@@ -9,18 +9,18 @@ case class DocOpen(
                     override val datetime: Option[LocalDateTime],
                     searchId: String,
                     docId: String
-                  ) extends Event(datetime) {
-
-  override def addToSession(ctx: ParseContext): Unit =
-    ctx.docOpens += this
-
-  override def addToContext(ctx: ParseContext): Unit = {
-    super.addToContext(ctx)
-    ctx.attachDocOpenToSearch(datetime, docId, searchId)
-  }
-}
+                  ) extends Event(datetime)
 
 object DocOpen extends EventObject[DocOpen] {
+
+  override def addToSession(ctx: ParseContext, event: DocOpen): Unit = {
+    ctx.docOpens += event
+  }
+
+  override def addToContext(ctx: ParseContext, event: DocOpen): Unit = {
+    super.addToContext(ctx, event)
+    ctx.attachDocOpenToSearch(event.datetime, event.docId, event.searchId)
+  }
 
   override val prefix = "DOC_OPEN"
 
@@ -39,6 +39,8 @@ object DocOpen extends EventObject[DocOpen] {
         (None, toks(1), toks(2))
     }
 
-    DocOpen(datetime, searchId, docId)
+    val event = DocOpen(datetime, searchId, docId)
+    addToContext(ctx, event)
+    event
   }
 }

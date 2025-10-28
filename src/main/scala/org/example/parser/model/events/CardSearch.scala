@@ -1,7 +1,7 @@
 package org.example.parser.model.events
 
 import org.example.parser.model.DatetimeParser.parseDatetime
-import org.example.parser.model.{EventObject, ParseContext, SearchEvent}
+import org.example.parser.model.{Event, ParseContext, SearchEvent, SearchEventObject}
 
 import java.time.LocalDateTime
 import scala.collection.mutable
@@ -11,16 +11,16 @@ case class CardSearch(
                        override val datetime: Option[LocalDateTime],
                        params: Seq[(Int, String)],
                        override val foundDocs: Seq[String]
-                     ) extends SearchEvent(id, datetime, foundDocs) {
+                     ) extends SearchEvent(id, datetime, foundDocs)
 
-  override def addToSession(ctx: ParseContext): Unit =
-    ctx.cardSearches += this
-}
-
-object CardSearch extends EventObject[CardSearch] {
+object CardSearch extends SearchEventObject[CardSearch] {
 
   override val prefix = "CARD_SEARCH_START"
   override val postfix = "CARD_SEARCH_END"
+
+  override def addToSession(ctx: ParseContext, event: CardSearch): Unit = {
+    ctx.cardSearches += event
+  }
 
   override def parse(ctx: ParseContext): CardSearch = {
 
@@ -58,6 +58,8 @@ object CardSearch extends EventObject[CardSearch] {
     val id = toks.head
     val docs = toks.tail
 
-    CardSearch(id, datetime, params.toList, docs)
+    val event = CardSearch(id, datetime, params.toList, docs)
+    addToContext(ctx, event)
+    event
   }
 }

@@ -18,8 +18,6 @@ case class ParseContext(fileName: String, lines: Iterator[String], logAcc: Logge
 
   val searches: mutable.Map[String, SearchEvent] = mutable.Map.empty
 
-  def +=(event: Event): Unit = event.addToContext(this)
-
   def attachDocOpenToSearch(dt: Option[LocalDateTime], docId: String, searchId: String): Unit = {
     searches.get(searchId) match {
       case Some(searchEvent) =>
